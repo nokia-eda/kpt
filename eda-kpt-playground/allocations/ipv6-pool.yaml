@@ -1,0 +1,8 @@
+apiVersion: core.eda.nokia.com/v1
+kind: SubnetAllocationPool
+metadata:
+  name: ipv6-pool
+spec:
+  segments:
+  - subnet: 111::222/96
+    subnetLength: 127

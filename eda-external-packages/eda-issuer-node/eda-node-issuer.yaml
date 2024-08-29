@@ -1,0 +1,38 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-node-ca
+spec:
+  isCA: true
+  commonName: eda-node-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-node-ca
+  secretTemplate:
+    labels:
+      eda.nokia.com/ca: "node"
+      eda.nokia.com/backup: "true"
+  usages:
+    - digital signature
+    - cert sign
+    - key encipherment
+    - server auth
+    - client auth
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: eda-root-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-node-issuer
+spec:
+  ca:
+    secretName: eda-node-ca

@@ -1,0 +1,8 @@
+apiVersion: appstore.eda.nokia.com/v1
+kind: Catalog
+metadata:
+  name: eda-catalog-builtin-apps
+spec:
+  title: EDA built in apps catalog
+  remoteURL: https://github.com/nokia-eda/catalog.git #kpt-set: ${APP_CATALOG}
+  authSecretRef: gh-catalog

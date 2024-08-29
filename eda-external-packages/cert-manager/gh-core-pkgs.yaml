@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  .dockerconfigjson: eyJhdXRocyI6eyJnaGNyLmlvL25va2lhLWVkYSI6eyJ1c2VybmFtZSI6Im5va2lhLWVkYS1ib3QiLCJwYXNzd29yZCI6ImdocF9tUlVBV2RHcUNWTUFpQzFqSDNyY0RSczZoV2swdFA0TktlY3AiLCJlbWFpbCI6ImVkYUBub2tpYS5jb20iLCJhdXRoIjoiYm05cmFXRXRaV1JoTFdKdmREcG5hSEJmYlZKVlFWZGtSM0ZEVmsxQmFVTXhha2d6Y21ORVVuTTJhRmRyTUhSUU5FNUxaV053In19fQ==
+kind: Secret
+metadata:
+  name: gitlab-core
+  namespace: cert-manager
+type: kubernetes.io/dockerconfigjson

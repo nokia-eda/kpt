@@ -1,0 +1,10 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeGroup
+metadata:
+  name: sudo
+spec:
+  services:
+    - GNMI
+    - CLI
+    - NETCONF
+  superuser: true

@@ -1,0 +1,9 @@
+apiVersion: cx.eda.nokia.com/v1alpha1
+kind: CxImage
+metadata:
+  name: srlinux-ghcr-24.7.1
+spec:
+  operatingSystem: srl
+  image: ghcr.io/nokia/srlinux:24.7.1-330 # kpt-set: ${SRL_24_7_1_GHCR}
+  version: 24.7.1
+  command: ["bash", "-c", "/init/entrypoint-embedcfg.sh"]

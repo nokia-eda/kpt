@@ -1,0 +1,7 @@
+apiVersion: core.eda.nokia.com/v1
+kind: HttpProxy
+metadata:
+  name: gogs-replica
+spec:
+  authType: atDestination
+  rootUrl: http://eda-git-replica:3000/

@@ -1,0 +1,8 @@
+apiVersion: core.eda.nokia.com/v1
+kind: IndexAllocationPool
+metadata:
+  name: vni-pool
+spec:
+  segments:
+  - start: 200
+    size: 4000

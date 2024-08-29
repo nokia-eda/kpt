@@ -1,0 +1,322 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: manifests.core.eda.nokia.com
+spec:
+  group: core.eda.nokia.com
+  names:
+    kind: Manifest
+    listKind: ManifestList
+    plural: manifests
+    singular: manifest
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: Manifest is the Schema for the manifests API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ManifestSpec defines the desired state of Manifest
+            properties:
+              appInfo:
+                description: Additional information relating the application described by this Manifest
+                properties:
+                  documentation:
+                    description: Relative path to any documentation
+                    type: string
+                  license:
+                    description: Relative path to a LICENSE file
+                    type: string
+                  ociSpecVersion:
+                    description: OCI Spec version of the built app image, populated by the edabuilder cli
+                    type: string
+                  readme:
+                    description: Relative path to the README for the application described by this Manifest
+                    type: string
+                  screenshots:
+                    description: Relative path to any screenshots to present in the App Store
+                    items:
+                      type: string
+                    type: array
+                  source:
+                    description: Relative path to the source repository for the application described by this Manfest
+                    type: string
+                  srcURI:
+                    description: Source URI that points to the source code of the application
+                    type: string
+                type: object
+              author:
+                description: Author of the application described by this Manifest
+                type: string
+              components:
+                description: A list of components provided in this Manifest
+                items:
+                  properties:
+                    cr:
+                      description: Definition of a CR provided in this component
+                      properties:
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                      required:
+                      - path
+                      type: object
+                    crd:
+                      description: Definition of a CRD provided in this component
+                      properties:
+                        api:
+                          description: Settings related to how this CRD is exposed in the API
+                          properties:
+                            expose:
+                              default: readWrite
+                              description: Indicates if this Kind will be made available through the EDA API, and what REST functions will be supported 'readWrite' maps to PUT, POST, PATCH, and DELETE. 'read' maps to GET, LIST, HEAD. 'none' results in the Kind not being made available in the API.
+                              enum:
+                              - none
+                              - read
+                              - readWrite
+                              type: string
+                          type: object
+                        kubernetes:
+                          description: Define how resources for this CRD will be imported/exported to/from Kubernetes
+                          properties:
+                            exportPolicy:
+                              enum:
+                              - all
+                              type: string
+                            importPolicy:
+                              description: Defines whether resources of this type will be exported to Kubernetes
+                              enum:
+                              - all
+                              - spec
+                              type: string
+                          type: object
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                        schema:
+                          description: Relative path to the schema to use with this CRD
+                          type: string
+                        ui:
+                          description: If set, this CRD will be exposed in the UI
+                          properties:
+                            category:
+                              description: Category in which to present this resource, these groups exist in the UI navigation menu
+                              type: string
+                            name:
+                              description: Name to use within the category to present this resource
+                              type: string
+                            panel:
+                              description: Panel in which to present this resource. 'main' renders resource under main panel. 'system_administration' renders resource under system administration panel.
+                              enum:
+                              - main
+                              - system_administration
+                              type: string
+                          required:
+                          - name
+                          type: object
+                      required:
+                      - path
+                      type: object
+                    dbSchema:
+                      description: Definition of schema for EDB, referencing a table and providing JSONSchema
+                      properties:
+                        schema:
+                          description: Relative path to the JSONSchema that defines the schema of the table
+                          type: string
+                        table:
+                          description: Provide the name of the table in the EDB to which this schema applies, e.g. ".db.example.table"
+                          type: string
+                      required:
+                      - schema
+                      - table
+                      type: object
+                    script:
+                      description: Definition of a script provided in this component
+                      properties:
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                        trigger:
+                          description: The trigger used to start execution of provided script resource
+                          properties:
+                            kind:
+                              description: Kind used to trigger the execution of provided script resource, e.g. Interface
+                              type: string
+                          required:
+                          - kind
+                          type: object
+                        type:
+                          description: The type of script
+                          enum:
+                          - config
+                          - state
+                          type: string
+                      required:
+                      - path
+                      - trigger
+                      type: object
+                    view:
+                      description: Definition of a UI view provided in this component
+                      properties:
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                        ui:
+                          description: Settings related to how this view is presented in the UI
+                          properties:
+                            category:
+                              description: Category in which to present this resource, these groups exist in the UI navigation menu
+                              type: string
+                            name:
+                              description: Name to use within the category to present this resource
+                              type: string
+                            panel:
+                              description: Panel in which to present this resource. 'main' renders resource under main panel. 'system_administration' renders resource under system administration panel.
+                              enum:
+                              - main
+                              - system_administration
+                              type: string
+                          required:
+                          - name
+                          type: object
+                      required:
+                      - path
+                      - ui
+                      type: object
+                    workflow:
+                      description: Definition of workflow provided in this component
+                      properties:
+                        definition:
+                          description: Relative path to the WorkflowDefinition resource that defines this workflow
+                          type: string
+                        image:
+                          description: Provide the container image to execute for this workflow
+                          type: string
+                      required:
+                      - definition
+                      - image
+                      type: object
+                  type: object
+                type: array
+              dependencies:
+                description: A list of other artifacts, images, or files this Manifest depends on
+                items:
+                  properties:
+                    artifact:
+                      description: Definition of an artifact to be loaded in artifact server
+                      properties:
+                        destination:
+                          description: Destination in the artifact server to host this artifact. This corresponds to the filePath field of an Artifact.
+                          type: string
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                      required:
+                      - path
+                      type: object
+                    container:
+                      description: Definition of a container image provided in this application
+                      properties:
+                        image:
+                          description: OCI image to use as a source for artifacts provided in this Manifest
+                          type: string
+                        name:
+                          description: Name of the container dependency
+                          type: string
+                        pullSecret:
+                          description: Pull secret reference that will be populated by the app store
+                          type: string
+                      required:
+                      - image
+                      - name
+                      type: object
+                    file:
+                      description: Definition of an artifact provided in this component
+                      properties:
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                      required:
+                      - path
+                      type: object
+                  type: object
+                type: array
+              description:
+                description: Summary description of the application described by this Manifest
+                type: string
+              gitPathPrefix:
+                description: A path prefix to apply when resolving any relative paths within this Manifest in the EDA application repository
+                type: string
+              gitReference:
+                description: Reference to a git hash or tag within the EDA application repository at which to load resources from components in this Manifest
+                type: string
+              group:
+                description: The Group components and their respective Kinds reside in
+                type: string
+              image:
+                description: OCI image to use as a source for artifacts provided in this Manifest
+                type: string
+              requirements:
+                description: Other applications this application depends on/interacts with
+                items:
+                  properties:
+                    appName:
+                      description: The name of an application the application described in this Manifest depends on
+                      type: string
+                    state:
+                      default: Present
+                      description: The state of the dependency, either Present or Absent
+                      enum:
+                      - Present
+                      - Absent
+                      type: string
+                    version:
+                      description: The version of the application the application described in this Manifest depends on or requires to be absent. Supported values are semantic versioning, e.g. 1.0.1, 'any', meaning any version, or operator+semver, e.g. <1.0.1, >1.0.1, <=1.0.1, >=1.0.1.
+                      type: string
+                  required:
+                  - appName
+                  - version
+                  type: object
+                type: array
+              supportedCoreVersions:
+                description: Supported core versions, i.e. the versions of the EDA core that this Manifest is compatible with
+                items:
+                  type: string
+                type: array
+              supportedEndpoints:
+                description: Endpoints supported by the application described by this Manifest
+                items:
+                  type: string
+                type: array
+              title:
+                description: Friendly name to use when displaying this Manifest, e.g. Interface
+                type: string
+              version:
+                description: The Version components and their respective Kinds reside in
+                type: string
+            required:
+            - components
+            - group
+            - title
+            - version
+            type: object
+          status:
+            description: ManifestStatus defines the observed state of Manifest
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

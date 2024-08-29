@@ -1,0 +1,7 @@
+apiVersion: core.eda.nokia.com/v1
+kind: IPAllocationPool
+metadata:
+  name: systemipv6-pool
+spec:
+  segments:
+  - subnet: 121::333/64

@@ -1,0 +1,10 @@
+apiVersion: core.eda.nokia.com/v1
+kind: IPInSubnetAllocationPool
+metadata:
+  name: ipv4-mgmt-pool
+spec:
+  segments:
+  - subnet: 192.168.0.0/16
+    allocations:
+    - name: gateway$$
+      value: 192.168.1.1/16

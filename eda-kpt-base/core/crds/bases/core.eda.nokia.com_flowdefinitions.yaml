@@ -1,0 +1,64 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: flowdefinitions.core.eda.nokia.com
+spec:
+  group: core.eda.nokia.com
+  names:
+    kind: FlowDefinition
+    listKind: FlowDefinitionList
+    plural: flowdefinitions
+    singular: flowdefinition
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.image
+      name: Image
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: FlowDefinition is the Schema for the flowdefinitions API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: FlowDefinitionSpec defines the desired state of FlowDefinition
+            properties:
+              image:
+                description: Container image containing the flow. For example "ghcr.io/nokia-eda/apps/operatingsystem:v1.0.0".
+                type: string
+              imagePullSecrets:
+                description: Secrets to use to pull the image for this workflow.
+                items:
+                  type: string
+                type: array
+              jsonSchemaSpec:
+                description: A string containing the JSON schema the workflow accepts as input.
+                type: string
+              jsonSchemaStatus:
+                description: A string containing the JSON schema the workflow will populate as output.
+                type: string
+            required:
+            - image
+            type: object
+          status:
+            description: FlowDefinitionStatus defines the observed state of FlowDefinition
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

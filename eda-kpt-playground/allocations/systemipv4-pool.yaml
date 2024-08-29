@@ -1,0 +1,7 @@
+apiVersion: core.eda.nokia.com/v1
+kind: IPAllocationPool
+metadata:
+  name: systemipv4-pool
+spec:
+  segments:
+  - subnet: 11.0.0.0/8

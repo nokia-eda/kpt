@@ -1,0 +1,50 @@
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: eda-node-trust-bundle
+  labels:
+    eda.nokia.com/backup: "true"
+spec:
+  sources:
+  - secret:
+      selector:
+        matchLabels:
+          eda.nokia.com/ca: "node"
+      key: "ca.crt"
+  target:
+    configMap:
+      key: "trust-bundle.pem"
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: eda-api-trust-bundle
+  labels:
+    eda.nokia.com/backup: "true"
+spec:
+  sources:
+  - secret:
+      selector:
+        matchLabels:
+          eda.nokia.com/ca: "api"
+      key: "ca.crt"
+  target:
+    configMap:
+      key: "trust-bundle.pem"
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: eda-internal-trust-bundle
+  labels:
+    eda.nokia.com/backup: "true"
+spec:
+  sources:
+  - secret:
+      selector:
+        matchLabels:
+          eda.nokia.com/ca: "internal"
+      key: "ca.crt"
+  target:
+    configMap:
+      key: "trust-bundle.pem"

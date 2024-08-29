@@ -1,0 +1,8 @@
+apiVersion: core.eda.nokia.com/v1
+kind: SubnetAllocationPool
+metadata:
+  name: ipv4-pool
+spec:
+  segments:
+  - subnet: 12.0.0.0/8
+    subnetLength: 31

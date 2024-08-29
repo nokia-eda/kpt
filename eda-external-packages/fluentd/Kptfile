@@ -1,0 +1,8 @@
+apiVersion: kpt.dev/v1
+kind: Kptfile
+metadata:
+  name: fluentd
+  annotations:
+    config.kubernetes.io/local-config: "true"
+info:
+  description: A sample deployment of fluentd + fluentbit for log capture + aggregation

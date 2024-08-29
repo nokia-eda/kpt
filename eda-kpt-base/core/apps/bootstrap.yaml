@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: eda-bsvr
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: eda-bsvr
+rules:
+- apiGroups: ["*"]
+  resources: ["*"]
+  verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: eda-bsvr-admin
+subjects:
+- kind: ServiceAccount
+  name: eda-bsvr
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: eda-bsvr
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: core.eda.nokia.com/v1
+kind: UdpProxy
+metadata:
+  name: eda-dhcp6
+spec:
+  bufferSize: 65535
+  destHost: eda-dhcp6
+  destPort: 547
+  proxyPort: 547
+  idleTimeout: 60
+---
+apiVersion: core.eda.nokia.com/v1
+kind: UdpProxy
+metadata:
+  name: eda-dhcp
+spec:
+  bufferSize: 65535
+  destHost: eda-dhcp
+  destPort: 67
+  proxyPort: 67
+  idleTimeout: 60

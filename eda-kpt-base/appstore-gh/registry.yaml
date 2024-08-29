@@ -1,0 +1,7 @@
+apiVersion: appstore.eda.nokia.com/v1
+kind: Registry
+metadata:
+  name: eda-apps-registry
+spec:
+  remoteURL: ghcr.io/nokia-eda # kpt-set: ${APP_REGISTRY}
+  authSecretRef: appstore-gh-registry

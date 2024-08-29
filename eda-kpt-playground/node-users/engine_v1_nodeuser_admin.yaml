@@ -1,0 +1,14 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeUser
+metadata:
+  name: admin
+spec:
+  username: admin
+  password: eda124!
+  groupBindings:
+  - nodeSelector:
+    - "eda.nokia.com/role=spine"
+    - "eda.nokia.com/role=borderleaf"
+    - "eda.nokia.com/role=leaf"
+    groups:
+    - "sudo"

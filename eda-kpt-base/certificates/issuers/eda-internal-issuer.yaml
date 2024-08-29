@@ -1,0 +1,37 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-internal-ca
+spec:
+  isCA: true
+  commonName: eda-internal-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-internal-ca
+  secretTemplate:
+    labels:
+      eda.nokia.com/ca: "internal"
+  usages:
+    - digital signature
+    - cert sign
+    - key encipherment
+    - server auth
+    - client auth
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: eda-root-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-internal-issuer
+spec:
+  ca:
+    secretName: eda-internal-ca

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: eda-realm-auth-secret
+  labels:
+    eda.nokia.com/backup: "true"
+type: kubernetes.io/basic-auth
+data:
+  username: a2V5Y2xvYWs=
+  password: bWFpbnN0cmVldA==

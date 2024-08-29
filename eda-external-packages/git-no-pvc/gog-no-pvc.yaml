@@ -1,0 +1,357 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gogs-admin-user
+  labels:
+    eda.nokia.com/backup: "true"
+type: kubernetes.io/basic-auth
+stringData:
+  username: ZWRhCg== # kpt-set: ${GOGS_ADMIN_USER}
+  password: ZWRhCg== # kpt-set: ${GOGS_ADMIN_PASS}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gogs-config
+data:
+  app.ini: |
+    BRAND_NAME = EDA
+    RUN_USER = git
+    RUN_MODE = prod
+    [log]
+    LEVEL     = info
+    [repository]
+    AUTO_INIT = true
+    FORCE_PRIVATE = true
+    [server]
+    OFFLINE_MODE = true
+    [database]
+    TYPE = sqlite3
+    [security]
+    INSTALL_LOCK = true
+    LOCAL_NETWORK_ALLOWLIST = *
+    [auth]
+    DISABLE_REGISTRATION = true
+    [server]
+    EXTERNAL_URL = http://eda-git:3000/core/httpproxy/v1/gogs/
+  readme: |
+    # {Name}
+
+    {Description}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: init-script
+data:
+  init.sh: |
+    #!/bin/bash
+    declare -a REPOS=("customresources" "intents" "keycloak" "credentials" "usersettings" "apps" "catalog" "identity")
+    # Number of seconds to wait for gogs to comeup
+    MAX_RETRIES=30
+    # MAX number of tries to create a repo
+    MAX_RETRY_REPO_CREATION=10
+    # Place the init marker in the persistent volume
+    INIT_MARKER=/data/eda-git-init.done
+    trap : TERM INT
+
+    USER_CONFIG=/var/run/eda/user-config
+    USERNAME_FILE=/var/run/eda/user-config/username
+    PASSWORD_FILE=/var/run/eda/user-config/password
+
+    until [[ -d "${USER_CONFIG}" ]] do echo "--> [$(date)] Waiting for "${USER_CONFIG}" to exist" && sleep 2s; done
+    until [[ -f "${USERNAME_FILE}" ]] do echo "--> [$(date)] Waiting for "${USERNAME_FILE}" to exist" && sleep 2s; done
+    until [[ -f "${PASSWORD_FILE}" ]] do echo "--> [$(date)] Waiting for "${PASSWORD_FILE}" to exist" && sleep 2s; done
+
+    ADMIN_USER="$(cat "${USERNAME_FILE}" | base64 -d)"
+    ADMIN_PASS="$(cat "${PASSWORD_FILE}" | base64 -d)"
+
+    check_gogs() {
+      curl -s localhost:3000 > /dev/null
+      echo $?
+    }
+
+    create_repo() {
+        repo=$1
+        created=0
+        retry_count=0
+        while [[ $retry_count -lt $MAX_RETRY_REPO_CREATION ]]; do
+            echo "--> [$(date)] Creating repository: ${repo}"
+            curl \
+                --fail-with-body \
+                -X POST localhost:3000/api/v1/admin/users/eda/repos \
+                -H "Content-Type: application/json" \
+                -d "{\"name\":\"${repo}\",\"description\":\"Repository storing saved ${repo}\",\"auto_init\":true,\"private\":true}" \
+                --user "${ADMIN_USER}:${ADMIN_PASS}"
+            exit_code=$?
+            echo ""
+            if [[ $exit_code -ne 0 ]]; then
+                retry_count=$((retry_count+1))
+                sleep 10s
+                echo "--> [$(date)] Could not create repo $repo - POST response $exit_code - retry_count $retry_count"
+            else
+                echo "--> [$(date)] Created repo $repo - retry_count $retry_count"
+                created=1
+                break
+            fi
+        done
+        if [[ $created -ne 1 ]]; then echo "-->[$(date)] Could not create repo $repo - retry_count $retry_count - aborting" && exit 1; fi
+    }
+
+    /app/gogs/docker/start.sh &
+    RETRY_COUNT=0
+    until [ $(check_gogs) -eq 0 ] || [ $RETRY_COUNT -eq $MAX_RETRIES ]; do
+      echo "--> [$(date)] Waiting for Gogs to start..."
+      sleep 1
+      let RETRY_COUNT=RETRY_COUNT+1
+    done
+
+    if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+      echo "--> [$(date)] Gogs did not start in time. Exiting."
+      exit 1
+    fi
+
+    if [[ ! -f "${INIT_MARKER}" ]] then
+      echo "--> [$(date)] Init marker at ${INIT_MARKER} not found, creating admin user and repos"
+      su - git -c "/app/gogs/gogs admin create-user --name ${ADMIN_USER} --password ${ADMIN_PASS} --admin --email eda@eda.dev"
+      for repo in "${REPOS[@]}"; do
+          create_repo "$repo"
+      done
+    else
+      echo "--> [$(date)] Existing init marker at ${INIT_MARKER} found, skipping creation of admin user + repos"
+    fi
+
+    touch "${INIT_MARKER}"
+    echo "--> [$(date)] Done init, sleeping to infinity and beyond"
+    sleep infinity & wait
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eda-git
+  labels:
+    eda.nokia.com/app: git
+    eda.nokia.com/app-group: control-plane
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      eda.nokia.com/app: git
+  template:
+    metadata:
+      labels:
+        eda.nokia.com/app: git
+        eda.nokia.com/app-group: control-plane
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: eda.nokia.com/app-group
+                      operator: In
+                      values:
+                        - control-plane
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: eda.nokia.com/app-group
+                    operator: In
+                    values:
+                      - control-plane
+      imagePullSecrets:
+        - name: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
+      containers:
+        - name: gogs
+          image: ghcr.io/nokia-eda/core/gogs:0.13.0 # kpt-set: ${GOGS_IMG_TAG}
+          #image: gogs/gogs:latest
+          ports:
+            - containerPort: 22
+              name: ssh
+            - containerPort: 3000
+              name: http
+          command: ['bash', '-c', "/init/init.sh"]
+          env:
+            - name: SOCAT_LINK
+              value: "false"
+          volumeMounts:
+            - name: init
+              mountPath: /init
+            - name: config
+              mountPath: /app/gogs/custom/conf
+            - name: config
+              mountPath: /data/gogs/conf
+            - name: user-config
+              readOnly: true
+              mountPath: "/var/run/eda/user-config"
+              # - name: readme
+              # mountPath: /data/gogs/conf/readme
+              # - name: readme
+              # mountPath: /app/gogs/custom/conf/readme
+      volumes:
+        - name: config
+          configMap:
+            name: gogs-config
+            defaultMode: 0744
+        - name: readme
+          configMap:
+            name: gogs-readme-template
+            defaultMode: 0744
+        - name: init
+          configMap:
+            name: init-script
+            defaultMode: 0755
+        - name: user-config
+          secret:
+            secretName: gogs-admin-user
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eda-git
+  labels:
+    eda.nokia.com/app: git
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 22
+    name: ssh
+  - port: 3000
+    name: web
+  selector:
+    eda.nokia.com/app: git
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gogs-replica-config
+data:
+  app.ini: |
+    BRAND_NAME = EDA
+    RUN_USER = git
+    RUN_MODE = prod
+    [log]
+    LEVEL     = info
+    [repository]
+    AUTO_INIT = true
+    [server]
+    OFFLINE_MODE = true
+    [database]
+    TYPE = sqlite3
+    [security]
+    INSTALL_LOCK = true
+    LOCAL_NETWORK_ALLOWLIST = *
+    [auth]
+    DISABLE_REGISTRATION = true
+    [server]
+    EXTERNAL_URL = http://eda-git-replica:3000/core/httpproxy/v1/gogs-replica/
+  readme: |
+    # {Name}
+
+    {Description}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eda-git-replica
+  labels:
+    eda.nokia.com/app: git-replica
+    eda.nokia.com/app-group: control-plane
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      eda.nokia.com/app: git-replica
+  template:
+    metadata:
+      labels:
+        eda.nokia.com/app: git-replica
+        eda.nokia.com/app-group: control-plane
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: eda.nokia.com/app-group
+                      operator: In
+                      values:
+                        - control-plane
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: eda.nokia.com/app-group
+                    operator: In
+                    values:
+                      - control-plane
+      imagePullSecrets:
+        - name: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
+      containers:
+        - name: gogs
+          image: ghcr.io/nokia-eda/core/gogs:0.13.0 # kpt-set: ${GOGS_IMG_TAG}
+          #image: gogs/gogs:latest
+          ports:
+            - containerPort: 22
+              name: ssh
+            - containerPort: 3000
+              name: http
+          command: ['bash', '-c', "/init/init.sh"]
+          env:
+            - name: SOCAT_LINK
+              value: "false"
+          volumeMounts:
+            - name: init
+              mountPath: /init
+            - name: config
+              mountPath: /app/gogs/custom/conf
+            - name: config
+              mountPath: /data/gogs/conf
+            - name: user-config
+              readOnly: true
+              mountPath: "/var/run/eda/user-config"
+              # - name: readme
+              # mountPath: /data/gogs/conf/readme
+              # - name: readme
+              # mountPath: /app/gogs/custom/conf/readme
+      volumes:
+        - name: config
+          configMap:
+            name: gogs-replica-config
+            defaultMode: 0744
+        - name: readme
+          configMap:
+            name: gogs-readme-template
+            defaultMode: 0744
+        - name: init
+          configMap:
+            name: init-script
+            defaultMode: 0755
+        - name: user-config
+          secret:
+            secretName: gogs-admin-user
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eda-git-replica
+  labels:
+    eda.nokia.com/app: git-replica
+spec:
+  type: ClusterIP
+  ports:
+  - port: 22
+    name: ssh
+  - port: 3000
+    name: web
+  selector:
+    eda.nokia.com/app: git-replica

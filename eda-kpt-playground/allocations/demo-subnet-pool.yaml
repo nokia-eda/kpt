@@ -1,0 +1,10 @@
+apiVersion: core.eda.nokia.com/v1
+kind: SubnetAllocationPool
+metadata:
+  name: demo-subnet-pool
+spec:
+  segments:
+  - subnet: 10.1.0.1/24
+    subnetLength: 28
+    #subnet: 1a01:1::1/120
+    #subnet-len: 124

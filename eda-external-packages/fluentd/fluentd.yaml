@@ -1,0 +1,354 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentd
+spec:
+  ports:
+  - port: 24224
+    protocol: TCP
+  selector:
+    eda.nokia.com/app: fluentd
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+data:
+  edafluent.conf: |
+    <source>
+      @type forward
+      port 24224
+      bind 0.0.0.0
+      @label @INPUT
+    </source>
+
+    <label @INPUT>
+      <filter **>
+        @type record_transformer
+        remove_keys time
+      </filter>
+      <match **>
+        @type relabel
+        @label @EDAAPPLABEL
+      </match>
+    </label>
+
+    <label @EDAAPPLABEL>
+      <match **>
+        @type rewrite_tag_filter
+        <rule>
+          key $['kubernetes']['labels']['eda.nokia.com/app']
+          pattern /^(.+)$/
+          tag $1
+          label @EDAGROUPLABEL
+        </rule>
+        <rule>
+          key $['kubernetes']['labels']['eda.nokia.com/app']
+          pattern /^(.+)$/
+          invert true
+          tag ${tag}
+          label @OUTPUT
+        </rule>
+      </match>
+    </label>
+
+    <label @EDAGROUPLABEL>
+      <match **>
+        @type rewrite_tag_filter
+        remove_tag_prefix kube.var.log.containers
+        <rule>
+          key $['kubernetes']['labels']['eda.nokia.com/app-group']
+          pattern /^(.+)$/
+          tag $1.${tag}
+          label @EDAPODLOGGER
+        </rule>
+        <rule>
+          key $['kubernetes']['labels']['eda.nokia.com/app-group']
+          pattern /^(.+)$/
+          invert true
+          tag nogroup.${tag}
+          label @EDAPODLOGGER
+        </rule>
+      </match>
+    </label>
+
+    <label @EDAPODLOGGER>
+      <match **>
+        @type rewrite_tag_filter
+        <rule>
+          key $['kubernetes']['pod_name']
+          pattern /^(.+)$/
+          tag ${tag}.$1
+          label @EDACONTAINERLOGGER
+        </rule>
+        <rule>
+          key $['kubernetes']['pod_name']
+          pattern /^(.+)$/
+          invert true
+          tag ${tag}
+          label @OUTPUT
+        </rule>
+      </match>
+    </label>
+
+    <label @EDACONTAINERLOGGER>
+      <match **>
+        @type rewrite_tag_filter
+        <rule>
+          key $['kubernetes']['container_name']
+          pattern /^(.+)$/
+          tag ${tag}__$1
+          label @EDAAPPSPECIFICLOGGER
+        </rule>
+        <rule>
+          key $['kubernetes']['container_name']
+          pattern /^(.+)$/
+          invert true
+          tag ${tag}
+          label @OUTPUT
+        </rule>
+      </match>
+    </label>
+
+    <label @EDAAPPSPECIFICLOGGER>
+      <match control-plane.apiserver.**>
+        @type relabel
+        @label @EDAAPPAPISERVERLOGGER
+      </match>
+      <match **>
+        @type relabel
+        @label @EDAERRORDETECTOR
+      </match>
+    </label>
+
+    <label @EDAAPPAPISERVERLOGGER>
+      <match **>
+        @type rewrite_tag_filter
+        <rule>
+          key logger
+          pattern /access/
+          tag ${tag}
+          label @EDAAPPAPISERVERACCESSHANDLER
+        </rule>
+        <rule>
+          key logger
+          pattern /access/
+          invert true
+          tag ${tag}
+          label @EDAERRORDETECTOR
+        </rule>
+      </match>
+    </label>
+
+    <label @EDAAPPAPISERVERACCESSHANDLER>
+      <match **>
+        @type copy
+        <store>
+          @type relabel
+          @label @EDAAPPAPISERVERACCESSLOGGER
+        </store>
+        <store>
+          @type relabel
+          @label @EDAERRORDETECTOR
+        </store>
+      </match>
+    </label>
+
+    <label @EDAAPPAPISERVERACCESSLOGGER>
+      <match **>
+        @type rewrite_tag_filter
+        <rule>
+          key dummywillnotbefound
+          pattern /^(.+)$/
+          invert true
+          # tag ${tag_parts[0]}.${tag_parts[1]}.access
+          tag "access"
+          label @EDAFILELOGGER
+        </rule>
+      </match>
+    </label>
+
+    <label @EDAERRORDETECTOR>
+      <match **>
+        @type rewrite_tag_filter
+        <rule>
+          key stream
+          pattern /stderr/
+          tag ${tag}
+          label @EDAERRORCOPIER
+        </rule>
+        # We will uncomment this for use in future
+        #<rule>
+        #  key log
+        #  pattern /error/i
+        #  tag ${tag}
+        #  label @EDAERRORCOPIER
+        #</rule>
+        <rule>
+          key stream
+          pattern /stderr/
+          invert true
+          tag ${tag}
+          label @EDAFILELOGGER
+        </rule>
+      </match>
+    </label>
+
+    <label @EDAERRORCOPIER>
+      <match **>
+        @type copy
+        <store>
+          @type relabel
+          @label @EDAFILELOGGER
+        </store>
+        <store>
+          @type relabel
+          @label @EDAERRORCOMMONLOGGER
+        </store>
+      </match>
+    </label>
+
+    <label @EDAERRORCOMMONLOGGER>
+      <match **>
+        @type rewrite_tag_filter
+        <rule>
+          key dummywillnotbefound
+          pattern /^(.+)$/
+          invert true
+          tag errors.${tag}
+          label @EDAFILELOGGERNONJSON
+        </rule>
+      </match>
+    </label>
+
+    <label @EDAFILELOGGERNONJSON>
+      <filter **>
+        @type record_transformer
+        remove_keys stream,$.kubernetes.labels,$.kubernetes.pod_name,$.kubernetes.namespace_name,$.kubernetes.pod_id,$.kubernetes.container_name,$.kubernetes.docker_id,$.kubernetes.container_hash,$.kubernetes.container_image
+      </filter>
+      <match **>
+        @type file
+        path /var/log/eda/${tag[0]}
+        append true
+        <buffer tag>
+          @type memory
+          flush_mode immediate
+        </buffer>
+      </match>
+    </label>
+
+    <label @EDAFILELOGGER>
+      <filter **>
+        @type record_transformer
+        remove_keys stream,$.kubernetes.labels,$.kubernetes.pod_name,$.kubernetes.namespace_name,$.kubernetes.pod_id,$.kubernetes.container_name,$.kubernetes.docker_id,$.kubernetes.container_hash,$.kubernetes.container_image
+      </filter>
+      <match **.access>
+        @type file
+        # the tag[100] is a workaround because the buffer usage mandates it
+        path /var/log/eda/${tag[100]}access
+        append true
+        <format>
+          @type json
+        </format>
+        <buffer tag>
+          @type memory
+          flush_mode immediate
+        </buffer>
+      </match>
+      <match **>
+        @type file
+        path /var/log/eda/${tag[0]}/${tag[1]}/${tag[2]}
+        append true
+        <format>
+          @type json
+        </format>
+        <buffer tag>
+          @type memory
+          flush_mode immediate
+        </buffer>
+      </match>
+    </label>
+
+    <label @OUTPUT>
+      <match **>
+        @type file
+        path /var/log/eda/unknown/${tag}
+        append true
+        <buffer tag>
+          @type memory
+          flush_mode immediate
+        </buffer>
+      </match>
+    </label>
+
+    <match **>
+      @type file
+      path /var/log/eda/others/${tag}
+      append true
+      <buffer tag>
+        @type memory
+        flush_mode immediate
+      </buffer>
+    </match>
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eda-fluentd
+  labels:
+    eda.nokia.com/app: fluentd
+    eda.nokia.com/app-group: control-plane
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      eda.nokia.com/app: fluentd
+  template:
+    metadata:
+      labels:
+        eda.nokia.com/app-group: control-plane
+        eda.nokia.com/app: fluentd
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: eda.nokia.com/app-group
+                      operator: In
+                      values:
+                        - control-plane
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: eda.nokia.com/app-group
+                    operator: In
+                    values:
+                      - control-plane
+      imagePullSecrets:
+        - name: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
+      volumes:
+        - name: fluentd-config-volume
+          configMap:
+            name: fluentd-config
+      containers:
+        - name: eda-fluentd
+          image: ghcr.io/nokia-eda/core/fluentd:v1.17.0-debian-1.0 # kpt-set: ${FD_IMG}
+          volumeMounts:
+            - name: fluentd-config-volume
+              mountPath: /fluentd/etc/edafluent.conf
+              subPath: edafluent.conf
+          env:
+            - name: FLUENTD_CONF
+              value: "edafluent.conf"
+          resources:
+            limits:
+              memory: 5Gi
+            requests:
+              cpu: 100m
+              memory: 200Mi

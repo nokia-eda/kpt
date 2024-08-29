@@ -1,0 +1,10 @@
+apiVersion: core.eda.nokia.com/v1
+kind: IPInSubnetAllocationPool
+metadata:
+  name: ipv6-mgmt-pool
+spec:
+  segments:
+  - subnet: 2000::/64
+    allocations:
+    - name: gateway$$
+      value: 2000::0101/64

@@ -1,0 +1,8 @@
+apiVersion: core.eda.nokia.com/v1
+kind: IndexAllocationPool
+metadata:
+  name: asn-pool
+spec:
+  segments:
+  - size: 3000
+    start: 100

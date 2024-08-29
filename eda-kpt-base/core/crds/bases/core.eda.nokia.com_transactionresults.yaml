@@ -1,0 +1,194 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.9.2
+  creationTimestamp: null
+  name: transactionresults.core.eda.nokia.com
+spec:
+  group: core.eda.nokia.com
+  names:
+    kind: TransactionResult
+    listKind: TransactionResultList
+    plural: transactionresults
+    singular: transactionresult
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.result
+      name: Result
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .spec.dryRun
+      name: DryRun
+      type: string
+    - jsonPath: .spec.description
+      name: Description
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: TransactionResult is the Schema for the transactionresults API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TransactionResultSpec defines the desired state of TransactionResult
+            properties:
+              description:
+                description: The description passed through from the input transaction, if any
+                type: string
+              dryRun:
+                description: Indicates the transaction was a dry run.
+                type: boolean
+              execution-summary:
+                description: A summary of this transaction
+                type: string
+              general-errors:
+                description: Any errors that aren't specific or can't be mapped to an individual application.
+                items:
+                  type: string
+                type: array
+              git-commit:
+                description: The git commit hash of the transaction
+                type: string
+              input-crs:
+                description: The set of input resources that were processed in the transaction.
+                items:
+                  properties:
+                    action:
+                      description: Action on the resource.
+                      type: string
+                    gvk:
+                      description: Group, version, kind of the resource.
+                      type: string
+                    name:
+                      description: Name of the resource.
+                      type: string
+                  required:
+                  - gvk
+                  - name
+                  type: object
+                type: array
+              intents-run:
+                description: The set of applications executed in this transaction.
+                items:
+                  properties:
+                    errors:
+                      description: Errors returned by this application, if any.
+                      items:
+                        type: string
+                      type: array
+                    gvk:
+                      description: Group, version, kind of the application.
+                      type: string
+                    name:
+                      description: Name of the application.
+                      type: string
+                    output-crs:
+                      description: Output resources created by this application.
+                      items:
+                        properties:
+                          action:
+                            description: Action on the resource.
+                            type: string
+                          gvk:
+                            description: Group, version, kind of the resource.
+                            type: string
+                          name:
+                            description: Name of the resource.
+                            type: string
+                        required:
+                        - gvk
+                        - name
+                        type: object
+                      type: array
+                    pool-allocs:
+                      description: Allocations made by this application.
+                      items:
+                        properties:
+                          key:
+                            description: The key of the allocation within the pool instance.
+                            type: string
+                          pool-name:
+                            description: The pool name.
+                            type: string
+                          pool-template:
+                            description: The pool template used.
+                            type: string
+                          value:
+                            description: The value of the allocation.
+                            type: string
+                        required:
+                        - key
+                        - pool-name
+                        - pool-template
+                        - value
+                        type: object
+                      type: array
+                    script:
+                      description: Application execution information.
+                      properties:
+                        execution-time-us:
+                          description: Execution time in microseconds.
+                          format: int32
+                          type: integer
+                        output:
+                          description: Any output from the application.
+                          type: string
+                      type: object
+                  required:
+                  - gvk
+                  - name
+                  - script
+                  type: object
+                type: array
+              nodes-with-config-changes:
+                description: Any TopoNodes with configuration changes in this transaction.
+                items:
+                  properties:
+                    errors:
+                      description: Any errors returned by this node.
+                      items:
+                        type: string
+                      type: array
+                    name:
+                      description: The name of the node.
+                      type: string
+                  required:
+                  - name
+                  type: object
+                type: array
+              result:
+                description: The transaction result.
+                type: string
+              result-content:
+                description: Indicates if the output of this transaction needed compressing for brevity. This primiarily occurs when a transaction would not be accepted by the Kubernetes API.
+                enum:
+                - FullContent
+                - PartialContent
+                type: string
+              timestamp:
+                description: The timestamp when the transaction finished
+                format: date-time
+                type: string
+              username:
+                description: The username of the user that initiated the transaction
+                type: string
+            type: object
+          status:
+            description: TransactionResultStatus defines the observed state of TransactionResult
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

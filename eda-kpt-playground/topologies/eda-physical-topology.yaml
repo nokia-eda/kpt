@@ -1,0 +1,28 @@
+apiVersion: core.eda.nokia.com/v1
+kind: TopologyState
+metadata:
+  name: physical
+spec:
+  enabled: true
+  uiName: Physical
+  uiDescription: The physical layout of the router and the interfaces and links which connect them.
+  overlays:
+  - key: status
+    enabled: true
+  defaultNodeTier: 4
+  nodeLabelsToTier:
+  - labelKey: eda.nokia.com/role
+    labelValue: backbone
+    tier: 1
+  - labelKey: eda.nokia.com/role
+    labelValue: superspine
+    tier: 2
+  - labelKey: eda.nokia.com/role
+    labelValue: spine
+    tier: 3
+  - labelKey: eda.nokia.com/role
+    labelValue: leaf
+    tier: 4
+  - labelKey: eda.nokia.com/role
+    labelValue: borderleaf
+    tier: 4
