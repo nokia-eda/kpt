@@ -29,46 +29,46 @@ spec:
   identity-git-repo:
     remote-path: /eda/identity.git # kpt-set: ${GIT_REPO_IDENTITY}
   artifactServer:
-    image: ghcr.io/nokia-eda/core/artifact-server:24.8.1-rc # kpt-set: ${ASVR_IMG}
+    image: ghcr.io/nokia-eda/core/artifact-server:24.8.2 # kpt-set: ${ASVR_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   bootstrapServer:
-    image: ghcr.io/nokia-eda/core/bootstrap-server:24.8.1-rc # kpt-set: ${BSVR_IMG}
+    image: ghcr.io/nokia-eda/core/bootstrap-server:24.8.2 # kpt-set: ${BSVR_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   cx:
-    image: ghcr.io/nokia-eda/core/cx:24.8.1-rc # kpt-set: ${CX_IMG}
+    image: ghcr.io/nokia-eda/core/cx:24.8.2 # kpt-set: ${CX_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   npp:
-    image: ghcr.io/nokia-eda/core/npp:24.8.1-rc # kpt-set: ${NPP_IMG}
+    image: ghcr.io/nokia-eda/core/npp:24.8.2 # kpt-set: ${NPP_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   stateEngine:
-    image: ghcr.io/nokia-eda/core/state-engine:24.8.1-rc # kpt-set: ${SE_IMG}
+    image: ghcr.io/nokia-eda/core/state-engine:24.8.2 # kpt-set: ${SE_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${SE_REPLICAS}
   stateAggregator:
-    image: ghcr.io/nokia-eda/core/state-aggregator:24.8.1-rc # kpt-set: ${SA_IMG}
+    image: ghcr.io/nokia-eda/core/state-aggregator:24.8.2 # kpt-set: ${SA_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${SA_REPLICAS}
   stateController:
-    image: ghcr.io/nokia-eda/core/state-controller:24.8.1-rc # kpt-set: ${SC_IMG}
+    image: ghcr.io/nokia-eda/core/state-controller:24.8.2 # kpt-set: ${SC_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   flowEngine:
-    image: ghcr.io/nokia-eda/core/flow-engine:24.8.1-rc # kpt-set: ${FE_IMG}
+    image: ghcr.io/nokia-eda/core/flow-engine:24.8.2 # kpt-set: ${FE_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   api:
-    image: ghcr.io/nokia-eda/core/api-server:24.8.1-rc # kpt-set: ${API_IMG}
+    image: ghcr.io/nokia-eda/core/api-server:24.8.2 # kpt-set: ${API_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${API_REPLICAS}
   appStore:
-    image: ghcr.io/nokia-eda/core/appstore-server:24.8.1-rc # kpt-set: ${ASC_IMG}
+    image: ghcr.io/nokia-eda/core/appstore-server:24.8.2 # kpt-set: ${ASC_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   testMan:
-    image: ghcr.io/nokia-eda/core/testman:24.8.1-rc # kpt-set: ${TM_IMG}
+    image: ghcr.io/nokia-eda/core/testman:24.8.2 # kpt-set: ${TM_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   identity:
-    image: ghcr.io/nokia-eda/core/eda-keycloak:24.8.1-rc # kpt-set: ${KC_IMG}
+    image: ghcr.io/nokia-eda/core/eda-keycloak:24.8.2 # kpt-set: ${KC_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   identitydb:
-    image: ghcr.io/nokia-eda/core/eda-postgres:24.8.1-rc # kpt-set: ${PG_IMG}
+    image: ghcr.io/nokia-eda/core/eda-postgres:24.8.2 # kpt-set: ${PG_IMG}
     image-credential: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
   llm:
     apiKey: "" # kpt-set: ${LLM_API_KEY}

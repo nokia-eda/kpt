@@ -30,7 +30,7 @@ kind: ConfigMap
 metadata:
   name: cx-cxdp-image
 data:
-  imageName: ghcr.io/nokia-eda/core/cxdp:24.8.1-rc # kpt-set: ${CXDP_IMG}
+  imageName: ghcr.io/nokia-eda/core/cxdp:24.8.2 # kpt-set: ${CXDP_IMG}
 ---
 apiVersion: v1
 kind: Service
