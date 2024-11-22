@@ -25,7 +25,7 @@ spec:
   user-settings-git-repo:
     remote-path: /eda/usersettings.git # kpt-set: ${GIT_REPO_USER_SETTINGS}
   certificate-git-repo:
-    remote-path: /eda/credentials.git # kpt-set: ${GIT_REPO_SECURTIY}
+    remote-path: /eda/credentials.git # kpt-set: ${GIT_REPO_SECURITY}
   identity-git-repo:
     remote-path: /eda/identity.git # kpt-set: ${GIT_REPO_IDENTITY}
   artifactServer:
