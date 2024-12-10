@@ -14,6 +14,9 @@ spec:
   target:
     configMap:
       key: "trust-bundle.pem"
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 ---
 apiVersion: trust.cert-manager.io/v1alpha1
 kind: Bundle
@@ -31,6 +34,9 @@ spec:
   target:
     configMap:
       key: "trust-bundle.pem"
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 ---
 apiVersion: trust.cert-manager.io/v1alpha1
 kind: Bundle
@@ -48,3 +54,6 @@ spec:
   target:
     configMap:
       key: "trust-bundle.pem"
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}

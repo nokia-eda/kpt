@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: targetnodes.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -15,6 +14,9 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
+    - jsonPath: .status.tlsStatus.nodeSecurityProfile
+      name: NodeSecurityProfile
+      type: string
     - jsonPath: .status.bootstrapStatus
       name: Status
       type: string
@@ -33,10 +35,19 @@ spec:
         description: TargetNode is the Schema for the targetnodes API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -285,7 +296,7 @@ spec:
                 - options
                 type: object
               macAddress:
-                description: MAC address of the TopoNode
+                description: ' MAC address of the TopoNode'
                 type: string
               operatingSystem:
                 description: The OS matching this NodeProfile
@@ -311,89 +322,10 @@ spec:
               serialNumberPath:
                 description: JSPath to use for retrieving the serial number string from the node
                 type: string
-              tls:
-                description: Set of TLS related attributes
-                properties:
-                  csr-params:
-                    description: A set of certificate signing request parameters used when asking for a CSR from the toponode
-                    properties:
-                      certificate-validity:
-                        default: 2160h
-                        description: CertificateValidity defines the duration for which the certificate is considered valid after issuance.
-                        type: string
-                      city:
-                        description: City denotes the city where the organization is based.
-                        type: string
-                      common-name:
-                        description: CommonName specifies the common name field of the CSR, typically representing the domain name.
-                        type: string
-                      country:
-                        description: Country indicates the country in which the organization is legally registered.
-                        type: string
-                      csr-suite:
-                        default: CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_256
-                        description: The CSRSuite value used when asking for a CSR from the toponode
-                        enum:
-                        - CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_256
-                        - CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_384
-                        - CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_512
-                        - CSRSUITE_X509_KEY_TYPE_RSA_3072_SIGNATURE_ALGORITHM_SHA_2_256
-                        - CSRSUITE_X509_KEY_TYPE_RSA_3072_SIGNATURE_ALGORITHM_SHA_2_384
-                        - CSRSUITE_X509_KEY_TYPE_RSA_3072_SIGNATURE_ALGORITHM_SHA_2_512
-                        - CSRSUITE_X509_KEY_TYPE_RSA_4096_SIGNATURE_ALGORITHM_SHA_2_256
-                        - CSRSUITE_X509_KEY_TYPE_RSA_4096_SIGNATURE_ALGORITHM_SHA_2_384
-                        - CSRSUITE_X509_KEY_TYPE_RSA_4096_SIGNATURE_ALGORITHM_SHA_2_512
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_PRIME256V1_SIGNATURE_ALGORITHM_SHA_2_256
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_PRIME256V1_SIGNATURE_ALGORITHM_SHA_2_384
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_PRIME256V1_SIGNATURE_ALGORITHM_SHA_2_512
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP384R1_SIGNATURE_ALGORITHM_SHA_2_256
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP384R1_SIGNATURE_ALGORITHM_SHA_2_384
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP384R1_SIGNATURE_ALGORITHM_SHA_2_512
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP521R1_SIGNATURE_ALGORITHM_SHA_2_256
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP521R1_SIGNATURE_ALGORITHM_SHA_2_384
-                        - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP521R1_SIGNATURE_ALGORITHM_SHA_2_512
-                        - CSRSUITE_X509_KEY_TYPE_EDDSA_ED25519
-                        type: string
-                      org:
-                        description: Org is the name of the organization requesting the CSR.
-                        type: string
-                      org-unit:
-                        description: OrgUnit specifies the organizational unit (like department or division) within the organization.
-                        type: string
-                      san:
-                        description: Subject Alternative Names contains additional hostnames or IP addresses covered by the CSR.
-                        properties:
-                          dns:
-                            description: Dns contains a list of DNS names that can be used to access the server.
-                            items:
-                              type: string
-                            type: array
-                          emails:
-                            description: Emails consists of email addresses that should be associated with the certificate.
-                            items:
-                              type: string
-                            type: array
-                          ips:
-                            description: Ips includes IP addresses that the certificate should validate.
-                            items:
-                              type: string
-                            type: array
-                          uris:
-                            description: Uris lists specific URIs that the certificate will authenticate.
-                            items:
-                              type: string
-                            type: array
-                        type: object
-                      state:
-                        description: State represents the state or province where the organization is located.
-                        type: string
-                    type: object
-                  issuer-ref:
-                    description: Reference to a CertManager issuer that must be used to sign nodes certificates
-                    type: string
-                type: object
               versionMatch:
-                description: Match the node-retrieved version string to TargetNode version The value should be a regular expression matching the version string that would appear on the node
+                description: |-
+                  Match the node-retrieved version string to TargetNode version
+                  The value should be a regular expression matching the version string that would appear on the node
                 type: string
               versionPath:
                 description: JSPath to use for retrieving the version string from the node
@@ -412,12 +344,108 @@ spec:
                 - Ready
                 - Failed
                 type: string
+              bootstrapStatusReason:
+                description: Human-readable message indicating details about the bootstrapStatus's Failed state
+                type: string
               dhcpStatus:
                 description: DHCP status of the Target
                 enum:
                 - Offered
                 - Acknowledged
                 type: string
+              tlsStatus:
+                description: TLS status of the Target
+                properties:
+                  nodeSecurityProfile:
+                    description: NodeSecurity Profile Used
+                    type: string
+                  tls:
+                    description: NodeSecurity Profile Used
+                    properties:
+                      csrParams:
+                        description: A set of certificate signing request parameters used when asking for a CSR from the toponode.
+                        properties:
+                          certificateValidity:
+                            default: 2160h
+                            description: CertificateValidity defines the duration for which the certificate is considered valid after issuance.
+                            type: string
+                          city:
+                            description: City denotes the city where the organization is based.
+                            type: string
+                          commonName:
+                            description: CommonName specifies the common name field of the CSR, typically representing the domain name.
+                            type: string
+                          country:
+                            description: Country indicates the country in which the organization is legally registered.
+                            type: string
+                          csrSuite:
+                            default: CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_256
+                            description: The CSRSuite value used when asking for a CSR from the toponode
+                            enum:
+                            - CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_256
+                            - CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_384
+                            - CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_512
+                            - CSRSUITE_X509_KEY_TYPE_RSA_3072_SIGNATURE_ALGORITHM_SHA_2_256
+                            - CSRSUITE_X509_KEY_TYPE_RSA_3072_SIGNATURE_ALGORITHM_SHA_2_384
+                            - CSRSUITE_X509_KEY_TYPE_RSA_3072_SIGNATURE_ALGORITHM_SHA_2_512
+                            - CSRSUITE_X509_KEY_TYPE_RSA_4096_SIGNATURE_ALGORITHM_SHA_2_256
+                            - CSRSUITE_X509_KEY_TYPE_RSA_4096_SIGNATURE_ALGORITHM_SHA_2_384
+                            - CSRSUITE_X509_KEY_TYPE_RSA_4096_SIGNATURE_ALGORITHM_SHA_2_512
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_PRIME256V1_SIGNATURE_ALGORITHM_SHA_2_256
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_PRIME256V1_SIGNATURE_ALGORITHM_SHA_2_384
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_PRIME256V1_SIGNATURE_ALGORITHM_SHA_2_512
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP384R1_SIGNATURE_ALGORITHM_SHA_2_256
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP384R1_SIGNATURE_ALGORITHM_SHA_2_384
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP384R1_SIGNATURE_ALGORITHM_SHA_2_512
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP521R1_SIGNATURE_ALGORITHM_SHA_2_256
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP521R1_SIGNATURE_ALGORITHM_SHA_2_384
+                            - CSRSUITE_X509_KEY_TYPE_ECDSA_SECP521R1_SIGNATURE_ALGORITHM_SHA_2_512
+                            - CSRSUITE_X509_KEY_TYPE_EDDSA_ED25519
+                            type: string
+                          org:
+                            description: Org is the name of the organization requesting the CSR.
+                            type: string
+                          orgUnit:
+                            description: OrgUnit specifies the organizational unit (like department or division) within the organization.
+                            type: string
+                          san:
+                            description: Subject Alternative Names contains additional hostnames or IP addresses covered by the CSR.
+                            properties:
+                              dns:
+                                description: Dns contains a list of DNS names that can be used to access the server.
+                                items:
+                                  type: string
+                                type: array
+                              emails:
+                                description: Emails consists of email addresses that should be associated with the certificate.
+                                items:
+                                  type: string
+                                type: array
+                              ips:
+                                description: Ips includes IP addresses that the certificate should validate.
+                                items:
+                                  type: string
+                                type: array
+                              uris:
+                                description: Uris lists specific URIs that the certificate will authenticate.
+                                items:
+                                  type: string
+                                type: array
+                            type: object
+                          state:
+                            description: State represents the state or province where the organization is located.
+                            type: string
+                        type: object
+                      issuerRef:
+                        description: Reference to a CertManager issuer that must be used to sign nodes certificates.
+                        type: string
+                      trustBundle:
+                        description: |-
+                          Reference to configMap that contains a CA certificate that is used to verify the node certificate
+                          when certificates are not managed by EDA.
+                        type: string
+                    type: object
+                type: object
             type: object
         type: object
     served: true

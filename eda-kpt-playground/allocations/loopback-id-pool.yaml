@@ -1,0 +1,11 @@
+apiVersion: core.eda.nokia.com/v1
+kind: IndexAllocationPool
+metadata:
+  name: loopback-id-pool
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:
+  segments:
+  - start: 0
+    size: 255

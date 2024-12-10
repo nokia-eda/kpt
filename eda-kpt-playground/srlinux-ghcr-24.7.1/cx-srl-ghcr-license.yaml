@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: cx-srl-24-7-1-ghcr-license
-data:
-  license.key: "" # kpt-set: ${SRL_24_7_1_GHCR_LIC_KEY}

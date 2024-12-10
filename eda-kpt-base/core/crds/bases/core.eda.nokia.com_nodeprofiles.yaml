@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: nodeprofiles.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -36,16 +35,29 @@ spec:
         description: NodeProfile is the Schema for the toponodes API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
             description: NodeProfileSpec defines the desired state of NodeProfile
             properties:
+              annotate:
+                default: false
+                description: Indicates if NPP should annotate sent configuration.
+                type: boolean
               containerImage:
                 description: Container image to use when simulating TopoNodes referencing this NodeProfile, e.g. ghcr.io/nokia/srlinux:24.7.1.
                 type: string
@@ -283,28 +295,6 @@ spec:
                     - IPv6
                     type: string
                 type: object
-              gnmiOptions:
-                description: Options specific to gNMI.
-                properties:
-                  annotate:
-                    default: false
-                    description: Indicates if NPP should annotate sent configuration.
-                    type: boolean
-                  commitConfirmed:
-                    default: false
-                    description: Use the Commit gNMI extension, supporting confirmed commits. Commit confirmed support allows gracefull rollback of settings on failure.
-                    type: boolean
-                  configSubscription:
-                    default: false
-                    description: Use the ConfigSubscription gNMI extension, allowing real time deviation monitoring instead of polling.
-                    type: boolean
-                  encoding:
-                    description: Encoding to use with gNMI, e.g. JsonIetf.
-                    enum:
-                    - Json
-                    - JsonIetf
-                    type: string
-                type: object
               imagePullSecret:
                 description: Secret used to authenticate to the container registry where the container image is hosted.
                 type: string
@@ -351,13 +341,6 @@ spec:
                 type: integer
               serialNumberPath:
                 description: JSPath to use for retrieving the serial number string from TopoNodes referencing this NodeProfile, e.g. .platform.chassis.serial-number.
-                type: string
-              transport:
-                default: GNMI
-                description: Transport protocol to use, e.g. GNMI.
-                enum:
-                - GNMI
-                - NullEndpoint
                 type: string
               version:
                 description: Sets the software version of this NodeProfile, e.g. 24.7.1 (for srl), or 24.7.r1 (for sros).

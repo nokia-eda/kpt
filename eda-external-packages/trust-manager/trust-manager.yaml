@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -449,14 +449,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
 ---
 # Source: trust-manager/templates/role.yaml
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: trust-manager
-  namespace: default
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -478,7 +478,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: trust-manager:leaderelection
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -502,7 +502,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: trust-manager
-  namespace: default
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -516,14 +516,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
 ---
 # Source: trust-manager/templates/rolebinding.yaml
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: trust-manager:leaderelection
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -537,14 +537,14 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
 ---
 # Source: trust-manager/templates/metrics-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
   name: trust-manager-metrics
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app: trust-manager
     app.kubernetes.io/name: trust-manager
@@ -567,7 +567,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app: trust-manager
     app.kubernetes.io/name: trust-manager
@@ -590,7 +590,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -614,7 +614,7 @@ spec:
     spec:
       serviceAccountName: trust-manager
       imagePullSecrets:
-      - name: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
+      - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       initContainers:
       - name: cert-manager-package-debian
         image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-package-debian:20210119.0" # kpt-set: ${TRUSTMGRBUNDLE_IMG}
@@ -650,13 +650,17 @@ spec:
           initialDelaySeconds: 3
           periodSeconds: 7
         command: ["trust-manager"]
-        args:
+        env:
+        - name: TRUST_NAMESPACE
+          value: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
+        args: # kpt-set: ${TRUSTMGR_ARGS}
         - "--log-level=1"
         - "--metrics-port=9402"
         - "--readiness-probe-port=6060"
         - "--readiness-probe-path=/readyz"
         # trust
-        - "--trust-namespace=default"
+        # TODO: figure out a kpt setter here
+        - "--trust-namespace=$(TRUST_NAMESPACE)"
         # webhook
         - "--webhook-host=0.0.0.0"
         - "--webhook-port=6443"
@@ -695,7 +699,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -703,9 +707,10 @@ metadata:
     app.kubernetes.io/version: "v0.9.2"
     app.kubernetes.io/managed-by: Helm
 spec:
-  commonName: "trust-manager.cert-manager.svc"
-  dnsNames:
-  - "trust-manager.cert-manager.svc"
+  commonName: "trust-manager.eda-system.svc" # kpt-set: trust-manager.${EDA_TRUSTMGR_NAMESPACE}.svc
+  # TODO: kpt-set this name
+  dnsNames: # kpt-set: ${EDA_TRUSTMGR_ISSUER_DNSNAMES}
+  - "trust-manager.eda-system.svc"
   secretName: trust-manager-tls
   revisionHistoryLimit: 1
   issuerRef:
@@ -718,7 +723,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: trust-manager
-  namespace: cert-manager
+  namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
     helm.sh/chart: trust-manager-v0.9.2
@@ -741,7 +746,7 @@ metadata:
     app.kubernetes.io/version: "v0.9.2"
     app.kubernetes.io/managed-by: Helm
   annotations:
-    cert-manager.io/inject-ca-from: "cert-manager/trust-manager"
+    cert-manager.io/inject-ca-from: "eda-system/trust-manager" # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}/trust-manager
 webhooks:
   - name: trust.cert-manager.io
     rules:
@@ -761,5 +766,5 @@ webhooks:
     clientConfig:
       service:
         name: trust-manager
-        namespace: cert-manager
+        namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
         path: /validate-trust-cert-manager-io-v1alpha1-bundle

@@ -1,0 +1,10 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeSecurityProfile
+metadata:
+  name: insecure
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:
+  nodeSelector:
+    - "eda.nokia.com/security-profile=insecure"

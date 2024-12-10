@@ -1,7 +1,0 @@
-apiVersion: core.eda.nokia.com/v1
-kind: HttpProxy
-metadata:
-  name: keycloak
-spec:
-  authType: atDestination
-  rootUrl: https://eda-keycloak:9443/core/httpproxy/v1/keycloak

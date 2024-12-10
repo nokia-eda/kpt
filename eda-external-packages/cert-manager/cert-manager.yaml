@@ -5560,7 +5560,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       imagePullSecrets:
-        - name: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
+        - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: cert-manager-cainjector
           image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-cainjector:v1.14.4" # kpt-set: ${CMCA_IMG}
@@ -5621,7 +5621,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       imagePullSecrets:
-        - name: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
+        - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: cert-manager-controller
           image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-controller:v1.14.4" # kpt-set: ${CMCT_IMG}
@@ -5701,7 +5701,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       imagePullSecrets:
-        - name: gitlab-core # kpt-set: ${CORE_IMG_CREDENTIALS}
+        - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: cert-manager-webhook
           image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-webhook:v1.14.4" # kpt-set: ${CMWH_IMG}

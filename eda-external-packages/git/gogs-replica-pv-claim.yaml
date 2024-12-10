@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: eda-git-replica-pv-claim
+  namespace: eda-system # kpt-set: ${EDA_GOGS_NAMESPACE}
+  labels:
+    eda.nokia.com/app: git-replica
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 24Gi # kpt-set: ${GOGS_REPLICA_PV_CLAIM_SIZE}

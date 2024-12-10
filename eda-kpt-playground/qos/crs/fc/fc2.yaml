@@ -1,0 +1,7 @@
+apiVersion: qos.eda.nokia.com/v1alpha1
+kind: ForwardingClass
+metadata:
+  name: fc2
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"

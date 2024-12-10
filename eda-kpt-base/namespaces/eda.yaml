@@ -1,0 +1,8 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Namespace
+metadata:
+  name: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:

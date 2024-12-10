@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: eda-api-ingress
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
   annotations:
     nginx.ingress.kubernetes.io/ssl-passthrough: "true" ## Terminate HTTPS from the client at the eda-api service
     nginx.ingress.kubernetes.io/affinity: "cookie"

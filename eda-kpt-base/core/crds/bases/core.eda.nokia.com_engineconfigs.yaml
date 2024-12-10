@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: engineconfigs.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -20,10 +19,19 @@ spec:
         description: EngineConfig is the Schema for the engineconfigs API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -38,19 +46,25 @@ spec:
                     properties:
                       criticalThreshold:
                         default: 95
-                        description: Set the threshold for which a critical alarm will be generated for allocation pool instance utilization, as a percentage. Using a value of 0 will disable the generation of major threshold alarms.
+                        description: |-
+                          Set the threshold for which a critical alarm will be generated for allocation pool instance utilization, as a percentage.
+                          Using a value of 0 will disable the generation of major threshold alarms.
                         maximum: 100
                         minimum: 0
                         type: integer
                       majorThreshold:
                         default: 90
-                        description: Set the threshold for which a major alarm will be generated for allocation pool instance utilization, as a percentage. Using a value of 0 will disable the generation of major threshold alarms.
+                        description: |-
+                          Set the threshold for which a major alarm will be generated for allocation pool instance utilization, as a percentage.
+                          Using a value of 0 will disable the generation of major threshold alarms.
                         maximum: 100
                         minimum: 0
                         type: integer
                       minorThreshold:
                         default: 80
-                        description: Set the threshold for which a minor alarm will be generated for allocation pool instance utilization, as a percentage. Using a value of 0 will disable the generation of minor threshold alarms.
+                        description: |-
+                          Set the threshold for which a minor alarm will be generated for allocation pool instance utilization, as a percentage.
+                          Using a value of 0 will disable the generation of minor threshold alarms.
                         maximum: 100
                         minimum: 0
                         type: integer
@@ -172,7 +186,9 @@ spec:
                     type: object
                 type: object
               customSettings:
-                description: Directives to override internal application settings This should be set only at direction of support
+                description: |-
+                  Directives to override internal application settings
+                  This should be set only at direction of support
                 items:
                   properties:
                     applicationName:
@@ -288,7 +304,9 @@ spec:
                 description: Settings related to interactions with Kubernetes.
                 properties:
                   exports:
-                    description: List of GVKs to export to kubernetes.  By default, any CR created by a script will not be exported to kubernetes unless listed in the exports list.
+                    description: |-
+                      List of GVKs to export to kubernetes.  By default, any CR created by a script will not be exported to kubernetes
+                      unless listed in the exports list.
                     items:
                       properties:
                         gvk:
@@ -360,6 +378,16 @@ spec:
                     description: Set the model for natural language processing
                     type: string
                 type: object
+              metricsServer:
+                description: Settings related to MetricsServer.
+                properties:
+                  image:
+                    description: The full URI to the image
+                    type: string
+                  image-credential:
+                    description: The credential to use when interacting with the image
+                    type: string
+                type: object
               npp:
                 description: Settings related to NPP.
                 properties:
@@ -371,12 +399,16 @@ spec:
                     type: string
                 type: object
               nppNodeLabelSelector:
-                description: Which nodes to run NPP for - if empty, all nodes are run, e.g. "role in (leaf-group1)" will run NPP only for toponodes with the label "role=leaf-group1".  This also controls which nodes are simulated.
+                description: |-
+                  Which nodes to run NPP for - if empty, all nodes are run, e.g. "role in (leaf-group1)" will run NPP only for
+                  toponodes with the label "role=leaf-group1".  This also controls which nodes are simulated.
                 items:
                   type: string
                 type: array
               playground:
-                description: Indicates if the current cluster is running in playground mode. If true, TargetNodes are generated by CX. Additionally a branch is created at startup to support changes in the playground, which can later be merged.
+                description: |-
+                  Indicates if the current cluster is running in playground mode. If true, TargetNodes are generated by CX.
+                  Additionally a branch is created at startup to support changes in the playground, which can later be merged.
                 type: string
               python:
                 description: Settings related to Python interpreters.
@@ -406,10 +438,14 @@ spec:
                 type: object
               simulate:
                 default: true
-                description: Simulate using CX - if true CX is reponsible for generating the TargetNode CRs (this flag is only relevant for !playground.  In the playground case, simulate is always true)
+                description: |-
+                  Simulate using CX - if true CX is reponsible for generating the TargetNode CRs (this flag is only relevant for
+                  !playground.  In the playground case, simulate is always true)
                 type: boolean
               simulateNodeLabelSelector:
-                description: Which nodes to simulate - if empty, all nodes are simulated, e.g. "role in (leaf-group1)" will simulate only toponodes with the label "role=leaf-group1"
+                description: |-
+                  Which nodes to simulate - if empty, all nodes are simulated, e.g. "role in (leaf-group1)" will simulate only
+                  toponodes with the label "role=leaf-group1"
                 items:
                   type: string
                 type: array
@@ -471,6 +507,8 @@ spec:
                     description: The full URI to the git repository
                     type: string
                 type: object
+            required:
+            - simulate
             type: object
           status:
             description: EngineConfigStatus defines the observed state of EngineConfig
@@ -524,6 +562,19 @@ spec:
                       - name
                       type: object
                     type: array
+                type: object
+              licenses:
+                description: Status related to licenses.
+                properties:
+                  activeLicense:
+                    description: Reference to the License currently providing the "base" feature.
+                    type: string
+                  expirationDate:
+                    description: Date and time the currently active license will expire.
+                    type: string
+                  licensedState:
+                    description: Licensed state, indicating the presence of a license providing the "base" feature.
+                    type: string
                 type: object
               run-status:
                 description: Indicates the current run status of the cluster.

@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: manifests.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -20,10 +19,19 @@ spec:
         description: Manifest is the Schema for the manifests API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -33,6 +41,11 @@ spec:
               appInfo:
                 description: Additional information relating the application described by this Manifest
                 properties:
+                  categories:
+                    description: Categories of the application described by this Manifest, used by UI
+                    items:
+                      type: string
+                    type: array
                   documentation:
                     description: Relative path to any documentation
                     type: string
@@ -81,7 +94,11 @@ spec:
                           properties:
                             expose:
                               default: readWrite
-                              description: Indicates if this Kind will be made available through the EDA API, and what REST functions will be supported 'readWrite' maps to PUT, POST, PATCH, and DELETE. 'read' maps to GET, LIST, HEAD. 'none' results in the Kind not being made available in the API.
+                              description: |-
+                                Indicates if this Kind will be made available through the EDA API, and what REST functions will be supported
+                                'readWrite' maps to PUT, POST, PATCH, and DELETE.
+                                'read' maps to GET, LIST, HEAD.
+                                'none' results in the Kind not being made available in the API.
                               enum:
                               - none
                               - read
@@ -102,6 +119,10 @@ spec:
                               - spec
                               type: string
                           type: object
+                        namespaced:
+                          default: true
+                          description: If set, resources of this CRD are namespace scoped
+                          type: boolean
                         path:
                           description: Relative path in the local application repository
                           type: string
@@ -118,7 +139,10 @@ spec:
                               description: Name to use within the category to present this resource
                               type: string
                             panel:
-                              description: Panel in which to present this resource. 'main' renders resource under main panel. 'system_administration' renders resource under system administration panel.
+                              description: |-
+                                Panel in which to present this resource.
+                                'main' renders resource under main panel.
+                                'system_administration' renders resource under system administration panel.
                               enum:
                               - main
                               - system_administration
@@ -183,7 +207,10 @@ spec:
                               description: Name to use within the category to present this resource
                               type: string
                             panel:
-                              description: Panel in which to present this resource. 'main' renders resource under main panel. 'system_administration' renders resource under system administration panel.
+                              description: |-
+                                Panel in which to present this resource.
+                                'main' renders resource under main panel.
+                                'system_administration' renders resource under system administration panel.
                               enum:
                               - main
                               - system_administration
@@ -261,6 +288,7 @@ spec:
                 type: string
               gitReference:
                 description: Reference to a git hash or tag within the EDA application repository at which to load resources from components in this Manifest
+                example: v27.3.1 or 69cd4d76c467f6f27e43f3f6284356d8941df8fb
                 type: string
               group:
                 description: The Group components and their respective Kinds reside in
@@ -283,7 +311,9 @@ spec:
                       - Absent
                       type: string
                     version:
-                      description: The version of the application the application described in this Manifest depends on or requires to be absent. Supported values are semantic versioning, e.g. 1.0.1, 'any', meaning any version, or operator+semver, e.g. <1.0.1, >1.0.1, <=1.0.1, >=1.0.1.
+                      description: |-
+                        The version of the application the application described in this Manifest depends on or requires to be absent.
+                        Supported values are semantic versioning, e.g. 1.0.1, 'any', meaning any version, or operator+semver, e.g. <1.0.1, >1.0.1, <=1.0.1, >=1.0.1.
                       type: string
                   required:
                   - appName

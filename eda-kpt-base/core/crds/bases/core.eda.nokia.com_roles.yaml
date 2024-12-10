@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: roles.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -20,10 +19,19 @@ spec:
         description: Role is the Schema for the roles API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -39,7 +47,10 @@ spec:
                   description: A role rule controlling access to a kubernetes resource.
                   properties:
                     apiGroups:
-                      description: The API groups for the resources controlled by the rule. An API group consists of an apiGroup and a version, e.g. "apigroup/version". The API group can be a wildcard ("*"), in which case it will match any API group.
+                      description: |-
+                        The API groups for the resources controlled by the rule.
+                        An API group consists of an apiGroup and a version, e.g. "apigroup/version".
+                        The API group can be a wildcard ("*"), in which case it will match any API group.
                       items:
                         minLength: 1
                         type: string
@@ -53,7 +64,10 @@ spec:
                       - readWrite
                       type: string
                     resources:
-                      description: Names for the resources controlled by the rule. It can be a wildcard ("*"), in which case it will match any resource in the matching API groups.
+                      description: |-
+                        Names for the resources controlled by the rule.
+                        It can be a wildcard ("*"), in which case it will match any resource
+                        in the matching API groups.
                       items:
                         minLength: 1
                         type: string
@@ -68,10 +82,16 @@ spec:
               tableRules:
                 description: The rules for access to the database tables.
                 items:
-                  description: A role rule controlling access to a EDB table.  Note that there is never write access to EDB.
+                  description: |-
+                    A role rule controlling access to a EDB table.  Note that
+                    there is never write access to EDB.
                   properties:
                     path:
-                      description: EDB path to which this rule applies. It can end in ".*" in which case the final portion of the table path can be anything, if the prefix matches. It can end in ".**" in which case the table path can be anything if the prefix matches.
+                      description: |-
+                        EDB path to which this rule applies. It can end in ".*"
+                        in which case the final portion of the table path can be anything, if the
+                        prefix matches. It can end in ".**" in which case the table path can be
+                        anything if the prefix matches.
                       minLength: 1
                       pattern: ^\..*
                       type: string
@@ -92,7 +112,11 @@ spec:
                   description: A role rule controlling access to an API server proxy.
                   properties:
                     path:
-                      description: The API server URL path to which this rule applies. It can end in "/*" in which case the final portion of the URL path can be anything, if the prefix matches. It can end in "/**" in which case the URL path can be anything if the prefix matches.
+                      description: |-
+                        The API server URL path to which this rule applies. It can end in "/*"
+                        in which case the final portion of the URL path can be anything, if the
+                        prefix matches. It can end in "/**" in which case the URL path can be
+                        anything if the prefix matches.
                       minLength: 1
                       pattern: ^/.*
                       type: string

@@ -2,6 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: eda-internal-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   isCA: true
   commonName: eda-internal-ca
@@ -32,6 +33,7 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: eda-internal-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   ca:
     secretName: eda-internal-ca

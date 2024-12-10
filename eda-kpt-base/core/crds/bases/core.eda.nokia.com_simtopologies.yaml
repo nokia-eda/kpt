@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: simtopologies.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -20,10 +19,19 @@ spec:
         description: SimTopology is the Schema for the simtopologies API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -48,6 +56,7 @@ spec:
                       enum:
                       - Linux
                       - TestMan
+                      - SrlTest
                       type: string
                   required:
                   - image
@@ -61,7 +70,9 @@ spec:
                 items:
                   properties:
                     interface:
-                      description: Normalized name of an interface/port. This is the normalized name of the interface in the TopoNode, for example 'ethernet-1-1'. The value of "*" indicates all interfaces on the TopoNode/s.
+                      description: |-
+                        Normalized name of an interface/port. This is the normalized name of the interface in the TopoNode, for example 'ethernet-1-1'.
+                        The value of "*" indicates all interfaces on the TopoNode/s.
                       type: string
                     node:
                       description: The TopoNode on which interfaces will be mapped to a SimNode. You may use the value "*" to indicate all TopoNodes.
@@ -70,7 +81,9 @@ spec:
                       description: The SimNode to which the interface will be mapped. This is the name of the SimNode as it is defined in the SimTopology.
                       type: string
                     simNodeInterface:
-                      description: The name of the interface to present to the SimNode to which the interface will be mapped. If not provided the interface name will be generated starting with "eth1", "eth2", ... . This is the interface name as it will appear in the SimNode.
+                      description: |-
+                        The name of the interface to present to the SimNode to which the interface will be mapped. If not provided the interface name will be generated starting with "eth1", "eth2", ... .
+                        This is the interface name as it will appear in the SimNode.
                       type: string
                   required:
                   - interface

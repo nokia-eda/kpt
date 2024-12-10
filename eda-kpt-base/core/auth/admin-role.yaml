@@ -2,7 +2,7 @@ apiVersion: core.eda.nokia.com/v1
 kind: ClusterRole
 metadata:
   name: system-administrator
-  namespace: default
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   description: This is the default administrator role for EDA. It cannot be deleted.  A user with this role can do anything.
   resourceRules:

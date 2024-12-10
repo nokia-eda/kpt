@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: toponodes.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -45,10 +44,19 @@ spec:
         description: TopoNode is the Schema for the toponodes API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -56,7 +64,9 @@ spec:
             description: A managed network element is represented via a TopoNode resource, describing characteristics of a specific element in the topology.
             properties:
               component:
-                description: List of components within the TopoNode. Used to define the type and location of linecards, fabrics (SFM), media adapter cards (MDA) and control cards (CPM).
+                description: |-
+                  List of components within the TopoNode.
+                  Used to define the type and location of linecards, fabrics (SFM), media adapter cards (MDA) and control cards (CPM).
                 items:
                   properties:
                     kind:
@@ -68,7 +78,9 @@ spec:
                       - connector
                       type: string
                     slot:
-                      description: The slot this Component resides in, unset for Components that do not have a slot or ID. e.g. 1 would denote the linecard slot 1, 1/1 would denote linecard slot 1 mda slot 1.
+                      description: |-
+                        The slot this Component resides in, unset for Components that do not have a slot or ID.
+                        e.g. 1 would denote the linecard slot 1, 1/1 would denote linecard slot 1 mda slot 1.
                       type: string
                     type:
                       description: Denotes the type of hardware being provisioned, e.g. xcm-x20.
@@ -82,7 +94,10 @@ spec:
                 description: Reference to a ConfigMap containing a license for the TopoNode. Overrides the license set in the referenced NodeProfile, if present.
                 type: string
               macAddress:
-                description: MAC address to associate with this TopoNode. Typically the chassis MAC address, optionally sent by a node in DHCP requests. Not required when a TopoNode is not being bootstrapped by EDA, or is simulated through CX.
+                description: |-
+                  MAC address to associate with this TopoNode.
+                  Typically the chassis MAC address, optionally sent by a node in DHCP requests.
+                  Not required when a TopoNode is not being bootstrapped by EDA, or is simulated through CX.
                 type: string
               nodeProfile:
                 description: Reference to a NodeProfile to use with this TopoNode.
@@ -90,13 +105,9 @@ spec:
               npp:
                 description: Options relating to NPP interactions with the node.
                 properties:
-                  deviationsOnConnect:
-                    default: false
-                    description: Indicates if deviations will be generated each time NPP connects to the endpoint. "true" indicates that on each disconnect/reconnect cycle from NPP towards the endpoint that NPP will compare the endpoints configuration with its expected configuration, and generated deviations for the delta. "false" indicates that on each disconnect/reconnect cycle from NPP towards the endpoint that NPP will overwrite the endpoints configuration with its expected configuration, potentially deleting any deviations that had appeared since NPP was last connected.
-                    type: boolean
                   mode:
                     default: normal
-                    description: The mode in which this TopoNode is functioning. "normal" (the default) indicates that NPP is expecting an endpoint to exist, and will accept and confirm changes only if the endpoint accepts them. "maintenance" indicates that no changes will be accepted for the TopoNode, irrespective if the endpoint is up and reachable. The exception is if an upgrade is occuring, in which case changes will be accepted. "null" indicates that changes will be accepted from CRs and no NPP will be spun up. NPP validation will not occur. This may be useful in playground mode to avoid spinning up of 1000s of NPPs. "emulate" indicates that changes will be accepted at the NPP level, without pushing them to a endpoint. NPP validation still occurs.  If no IP address is present, we also run in emulate mode.
+                    description: "The mode in which this TopoNode is functioning.\n\"normal\" (the default)\n   indicates that NPP is expecting an endpoint to exist, and will accept and confirm changes only if the endpoint\n   accepts them.\n\"maintenance\"\n   indicates that no changes will be accepted for the TopoNode, irrespective if the endpoint is up and reachable.\n   The exception is if an upgrade is occuring, in which case changes will be accepted.\n\"null\"\n\t  indicates that changes will be accepted from CRs and no NPP will be spun up. NPP validation will not occur.\n   This may be useful in playground mode to avoid spinning up of 1000s of NPPs.\n\"emulate\"\n   indicates that changes will be accepted at the NPP level, without pushing them to a endpoint. NPP validation\n   still occurs.  If no IP address is present, we also run in emulate mode."
                     enum:
                     - normal
                     - maintenance
@@ -106,7 +117,9 @@ spec:
                 type: object
               onBoarded:
                 default: false
-                description: Indicates if this TopoNode has been bootstrapped or is reachable via configured credentials. Set by BootstrapServer when it completes onboarding functions for a given TopoNode. Most applications ignore TopoNodes that have not been onboarded yet.
+                description: |-
+                  Indicates if this TopoNode has been bootstrapped or is reachable via configured credentials. Set by BootstrapServer when it completes onboarding functions for a given TopoNode.
+                  Most applications ignore TopoNodes that have not been onboarded yet.
                 type: boolean
               operatingSystem:
                 default: srl
@@ -119,10 +132,22 @@ spec:
                 description: Platform type of this TopoNode, e.g. 7220 IXR-D3L.
                 type: string
               productionAddress:
-                description: Production address of this TopoNode - this is the address the real, production instance of this TopoNode uses. If left blank, an address will be allocated from the management IP pool specified in the referenced NodeProfile. If this TopoNode is not bootstrapped by EDA this field must be provided.
-                type: string
+                description: |-
+                  Production address of this TopoNode - this is the address the real, production instance of this TopoNode uses.
+                  If left blank, an address will be allocated from the management IP pool specified in the referenced NodeProfile.
+                  If this TopoNode is not bootstrapped by EDA this field must be provided.
+                properties:
+                  ipv4:
+                    description: The IPv4 production address
+                    type: string
+                  ipv6:
+                    description: The IPv6 production address
+                    type: string
+                type: object
               serialNumber:
-                description: Serial number of this TopoNode, optionally sent by a node in DHCP requests. Not required when a TopoNode is not being bootstrapped by EDA, or is simulated through CX.
+                description: |-
+                  Serial number of this TopoNode, optionally sent by a node in DHCP requests.
+                  Not required when a TopoNode is not being bootstrapped by EDA, or is simulated through CX.
                 type: string
               systemInterface:
                 description: Name of the Interface resource representing the primary loopback on the TopoNode.

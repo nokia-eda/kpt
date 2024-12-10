@@ -1,0 +1,11 @@
+apiVersion: qos.eda.nokia.com/v1alpha1
+kind: Queue
+metadata:
+  name: unicast-8
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:
+  queueID: 8
+  queueType: Normal
+  trafficType: Unicast

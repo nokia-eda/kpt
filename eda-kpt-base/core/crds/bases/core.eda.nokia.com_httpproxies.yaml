@@ -2,8 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.9.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.16.4
   name: httpproxies.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -24,10 +23,19 @@ spec:
         description: HttpProxy is the Schema for the proxy API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -35,7 +43,10 @@ spec:
             description: HttpProxySpec defines the desired state of HttpProxy
             properties:
               authType:
-                description: Determines where authentication happens. If "atDestination", then no authentication happens in API server and any auth tokens are forwarded as is. If "inApiServer", then authentication happens within the API server and auth tokens are stripped prior to forwarding.
+                description: |-
+                  Determines where authentication happens.
+                  If "atDestination", then no authentication happens in API server and any auth tokens are forwarded as is.
+                  If "inApiServer", then authentication happens within the API server and auth tokens are stripped prior to forwarding.
                 enum:
                 - atDestination
                 - inApiServer

@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: eda-cx-admin
+subjects:
+- kind: ServiceAccount
+  name: eda-cx
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+roleRef:
+  kind: ClusterRole
+  name: eda-cx
+  apiGroup: rbac.authorization.k8s.io

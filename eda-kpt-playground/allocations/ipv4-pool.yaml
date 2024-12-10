@@ -2,6 +2,9 @@ apiVersion: core.eda.nokia.com/v1
 kind: SubnetAllocationPool
 metadata:
   name: ipv4-pool
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
 spec:
   segments:
   - subnet: 12.0.0.0/8

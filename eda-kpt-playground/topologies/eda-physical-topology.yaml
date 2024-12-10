@@ -1,7 +1,8 @@
-apiVersion: core.eda.nokia.com/v1
-kind: TopologyState
+apiVersion: topologies.eda.nokia.com/v1alpha1
+kind: Topology
 metadata:
   name: physical
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   enabled: true
   uiName: Physical
@@ -9,20 +10,3 @@ spec:
   overlays:
   - key: status
     enabled: true
-  defaultNodeTier: 4
-  nodeLabelsToTier:
-  - labelKey: eda.nokia.com/role
-    labelValue: backbone
-    tier: 1
-  - labelKey: eda.nokia.com/role
-    labelValue: superspine
-    tier: 2
-  - labelKey: eda.nokia.com/role
-    labelValue: spine
-    tier: 3
-  - labelKey: eda.nokia.com/role
-    labelValue: leaf
-    tier: 4
-  - labelKey: eda.nokia.com/role
-    labelValue: borderleaf
-    tier: 4

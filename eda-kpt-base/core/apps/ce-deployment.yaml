@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eda-ce
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/app-group: control-plane
+    eda.nokia.com/app: configengine
+spec:
+  selector:
+    matchLabels:
+      eda.nokia.com/app: configengine
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        eda.nokia.com/app-group: control-plane
+        eda.nokia.com/app: configengine
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: eda.nokia.com/app-group
+                      operator: In
+                      values:
+                        - control-plane
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: eda.nokia.com/app-group
+                    operator: In
+                    values:
+                      - control-plane
+      serviceAccountName: eda-ce
+      terminationGracePeriodSeconds: 10
+      imagePullSecrets:
+        - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
+      containers:
+        - name: eda-ce
+          image: ghcr.io/nokia-eda/core/config-engine:24.12.1 # kpt-set: ${CE_IMG}
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: HTTP_PROXY
+              value: "" # kpt-set: ${HTTP_PROXY}
+            - name: HTTPS_PROXY
+              value: "" # kpt-set: ${HTTPS_PROXY}
+            - name: NO_PROXY
+              value: "" # kpt-set: ${NO_PROXY}
+            - name: http_proxy
+              value: "" # kpt-set: ${http_proxy}
+            - name: https_proxy
+              value: "" # kpt-set: ${https_proxy}
+            - name: no_proxy
+              value: "" # kpt-set: ${no_proxy}
+          volumeMounts:
+            - mountPath: /var/run/eda/tls/internal/client
+              name: tls
+            - mountPath: /var/run/eda/tls/internal/trust
+              name: trustbundle
+            - mountPath: /var/run/eda/tls/georedundant/client
+              name: georedundant-tls
+            - mountPath: /var/run/eda/tls/georedundant/trust
+              name: georedundant-trustbundle
+      volumes:
+        - csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda
+              csi.cert-manager.io/issuer-name: eda-internal-issuer
+          name: tls
+        - configMap:
+            defaultMode: 420
+            name: eda-internal-trust-bundle
+            optional: false
+          name: trustbundle
+        - csi:
+            driver: csi.cert-manager.io
+            readOnly: true
+            volumeAttributes:
+              csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda
+              csi.cert-manager.io/issuer-name: eda-api-issuer
+          name: georedundant-tls
+        - configMap:
+            defaultMode: 420
+            name: eda-georedundant-trust-bundle
+            optional: true
+          name: georedundant-trustbundle

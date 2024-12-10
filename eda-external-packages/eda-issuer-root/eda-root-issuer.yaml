@@ -2,5 +2,6 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: eda-root-ca-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   selfSigned: {}

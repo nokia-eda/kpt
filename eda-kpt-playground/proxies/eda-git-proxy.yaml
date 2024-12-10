@@ -2,6 +2,7 @@ apiVersion: core.eda.nokia.com/v1
 kind: HttpProxy
 metadata:
   name: gogs
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   authType: atDestination
   rootUrl: http://eda-git:3000/

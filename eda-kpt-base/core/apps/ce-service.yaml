@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eda-ce
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/app: configengine
+spec:
+  type: ClusterIP
+  selector:
+    eda.nokia.com/app: configengine
+  ports:
+    - protocol: TCP
+      port: 51200
+      targetPort: 51200
+      name: ce-grpc-port

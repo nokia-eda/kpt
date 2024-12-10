@@ -1,0 +1,9 @@
+apiVersion: core.eda.nokia.com/v1
+kind: WorkflowDefinition
+metadata:
+  name: app-installer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  image: ghcr.io/nokia-eda/core/appstore-flow:24.12.1 # kpt-set: ${ASF_IMG}
+  imagePullSecrets:
+    - core # kpt-set: ${CORE_IMG_CREDENTIALS}

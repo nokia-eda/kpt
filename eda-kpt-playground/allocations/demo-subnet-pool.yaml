@@ -2,9 +2,12 @@ apiVersion: core.eda.nokia.com/v1
 kind: SubnetAllocationPool
 metadata:
   name: demo-subnet-pool
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
 spec:
   segments:
-  - subnet: 10.1.0.1/24
+  - subnet: 10.1.0.0/24
     subnetLength: 28
     #subnet: 1a01:1::1/120
     #subnet-len: 124

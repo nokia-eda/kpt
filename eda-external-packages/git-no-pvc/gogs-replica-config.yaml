@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gogs-replica-config
+  namespace: eda-system # kpt-set: ${EDA_GOGS_NAMESPACE}
+data:
+  app.ini: |
+    BRAND_NAME = EDA
+    RUN_USER = git
+    RUN_MODE = prod
+    [log]
+    LEVEL     = info
+    [repository]
+    AUTO_INIT = true
+    [server]
+    OFFLINE_MODE = true
+    [database]
+    TYPE = sqlite3
+    [security]
+    INSTALL_LOCK = true
+    LOCAL_NETWORK_ALLOWLIST = *
+    [auth]
+    DISABLE_REGISTRATION = true
+    [server]
+    EXTERNAL_URL = http://eda-git-replica:3000/core/httpproxy/v1/gogs-replica/
+  readme: |-
+    # {Name}
+
+    {Description}

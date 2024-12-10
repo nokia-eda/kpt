@@ -2,10 +2,15 @@ apiVersion: bootstrap.eda.nokia.com/v1alpha1
 kind: Init
 metadata:
   name: init-base
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
 spec:
-
-# nodeSelector:
-# - 'eda.nokia.com/role=leaf'
-# - 'eda.nokia.com/role=spine'
-# - 'eda.nokia.com/role=borderleaf'
-# - 'eda.nokia.com/role=superspine'
+  # nodeSelector:
+  # - 'eda.nokia.com/role=leaf'
+  # - 'eda.nokia.com/role=spine'
+  # - 'eda.nokia.com/role=borderleaf'
+  # - 'eda.nokia.com/role=superspine'
+  mgmt:
+    ipv4DHCP: true
+    ipv6DHCP: true

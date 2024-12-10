@@ -2,9 +2,12 @@ apiVersion: core.eda.nokia.com/v1
 kind: IPInSubnetAllocationPool
 metadata:
   name: ipv6-mgmt-pool
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
 spec:
   segments:
-  - subnet: 2000::/64
+  - subnet: 2000::0/64
     allocations:
     - name: gateway$$
       value: 2000::0101/64

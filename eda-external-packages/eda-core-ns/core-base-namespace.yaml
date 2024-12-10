@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/core-ns: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+    kubernetes.io/metadata.name: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
