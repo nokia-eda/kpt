@@ -6,3 +6,5 @@ metadata:
 spec:
   remoteURL: ghcr.io # kpt-set: ${APP_REGISTRY}
   authSecretRef: appstore-gh-registry
+  skipTLSVerify: false # kpt-set: ${APP_REGISTRY_SKIPTLSVERIFY}
+  mirror: "" # kpt-set: ${APP_REGISTRY_MIRROR}

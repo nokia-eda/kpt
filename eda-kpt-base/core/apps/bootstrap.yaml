@@ -33,7 +33,7 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   bufferSize: 65535
-  destHost: eda-dhcp6
+  destHost: eda-dhcpv6
   destPort: 547
   proxyPort: 547
   idleTimeout: 60

@@ -46,6 +46,7 @@ spec:
                 description: |-
                   Provide the file path, including an optional file name
                   For Artifacts that are directories themselves a file name is not required
+                minLength: 1
                 type: string
               git:
                 description: A git hash can be used to pull down the file from git
@@ -104,6 +105,7 @@ spec:
                 description: |-
                   Provide the repo
                   Multiple artifacts can have same repo
+                minLength: 1
                 type: string
                 x-kubernetes-validations:
                 - message: repo is immutable
