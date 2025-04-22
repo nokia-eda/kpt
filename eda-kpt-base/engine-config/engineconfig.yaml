@@ -30,53 +30,53 @@ spec:
   identity-git-repo:
     remote-path: /eda/identity.git # kpt-set: ${GIT_REPO_IDENTITY}
   artifactServer:
-    image: ghcr.io/nokia-eda/core/artifact-server:24.12.3 # kpt-set: ${ASVR_IMG}
+    image: ghcr.io/nokia-eda/core/artifact-server:24.12.4 # kpt-set: ${ASVR_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   bootstrapServer:
-    image: ghcr.io/nokia-eda/core/bootstrap-server:24.12.3 # kpt-set: ${BSVR_IMG}
+    image: ghcr.io/nokia-eda/core/bootstrap-server:24.12.4 # kpt-set: ${BSVR_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   cx:
-    image: ghcr.io/nokia-eda/core/cx:24.12.3 # kpt-set: ${CX_IMG}
+    image: ghcr.io/nokia-eda/core/cx:24.12.4 # kpt-set: ${CX_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   cxCluster:
     isCxAgent: false #kpt-set: ${CXCLUSTER_ISAGENT}
     address: eda-cx-standalone #kpt-set: ${CXCLUSTER_ADDR}
     port: 52200 #kpt-set: ${CXCLUSTER_PORT}
   metricsServer:
-    image: ghcr.io/nokia-eda/core/metrics-server:24.12.3 # kpt-set: ${EMS_IMG}
+    image: ghcr.io/nokia-eda/core/metrics-server:24.12.4 # kpt-set: ${EMS_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   npp:
-    image: ghcr.io/nokia-eda/core/npp:24.12.3 # kpt-set: ${NPP_IMG}
+    image: ghcr.io/nokia-eda/core/npp:24.12.4 # kpt-set: ${NPP_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   stateEngine:
-    image: ghcr.io/nokia-eda/core/state-engine:24.12.3 # kpt-set: ${SE_IMG}
+    image: ghcr.io/nokia-eda/core/state-engine:24.12.4 # kpt-set: ${SE_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${SE_REPLICAS}
   stateAggregator:
-    image: ghcr.io/nokia-eda/core/state-aggregator:24.12.3 # kpt-set: ${SA_IMG}
+    image: ghcr.io/nokia-eda/core/state-aggregator:24.12.4 # kpt-set: ${SA_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${SA_REPLICAS}
   stateController:
-    image: ghcr.io/nokia-eda/core/state-controller:24.12.3 # kpt-set: ${SC_IMG}
+    image: ghcr.io/nokia-eda/core/state-controller:24.12.4 # kpt-set: ${SC_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   flowEngine:
-    image: ghcr.io/nokia-eda/core/flow-engine:24.12.3 # kpt-set: ${FE_IMG}
+    image: ghcr.io/nokia-eda/core/flow-engine:24.12.4 # kpt-set: ${FE_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   api:
-    image: ghcr.io/nokia-eda/core/api-server:24.12.3 # kpt-set: ${API_IMG}
+    image: ghcr.io/nokia-eda/core/api-server:24.12.4 # kpt-set: ${API_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${API_REPLICAS}
   appStore:
-    image: ghcr.io/nokia-eda/core/appstore-server:24.12.3 # kpt-set: ${ASC_IMG}
+    image: ghcr.io/nokia-eda/core/appstore-server:24.12.4 # kpt-set: ${ASC_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   testMan:
-    image: ghcr.io/nokia-eda/core/testman:24.12.3 # kpt-set: ${TM_IMG}
+    image: ghcr.io/nokia-eda/core/testman:24.12.4 # kpt-set: ${TM_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   identity:
-    image: ghcr.io/nokia-eda/core/eda-keycloak:24.12.3 # kpt-set: ${KC_IMG}
+    image: ghcr.io/nokia-eda/core/eda-keycloak:24.12.4 # kpt-set: ${KC_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   identitydb:
-    image: ghcr.io/nokia-eda/core/eda-postgres:24.12.3 # kpt-set: ${PG_IMG}
+    image: ghcr.io/nokia-eda/core/eda-postgres:24.12.4 # kpt-set: ${PG_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   llm:
     apiKey: "" # kpt-set: ${LLM_API_KEY}

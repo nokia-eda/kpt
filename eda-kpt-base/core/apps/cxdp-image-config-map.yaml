@@ -4,4 +4,4 @@ metadata:
   name: cx-cxdp-image
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 data:
-  imageName: ghcr.io/nokia-eda/core/cxdp:24.12.3 # kpt-set: ${CXDP_IMG}
+  imageName: ghcr.io/nokia-eda/core/cxdp:24.12.4 # kpt-set: ${CXDP_IMG}

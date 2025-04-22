@@ -44,7 +44,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-ce
-          image: ghcr.io/nokia-eda/core/config-engine:24.12.3 # kpt-set: ${CE_IMG}
+          image: ghcr.io/nokia-eda/core/config-engine:24.12.4 # kpt-set: ${CE_IMG}
           env:
             - name: POD_IP
               valueFrom:
