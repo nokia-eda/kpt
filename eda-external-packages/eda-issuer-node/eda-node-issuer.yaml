@@ -38,3 +38,35 @@ metadata:
 spec:
   ca:
     secretName: eda-node-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-bootstrap-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  isCA: true
+  commonName: eda-bootstrap-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-bootstrap-ca
+  privateKey:
+    algorithm: RSA
+    size: 4096
+    rotationPolicy: Always
+  issuerRef:
+    name: eda-root-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-bootstrap-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  ca:
+    secretName: eda-bootstrap-ca

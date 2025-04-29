@@ -46,23 +46,27 @@ spec:
           metadata:
             type: object
           spec:
-            description: RegistrySpec defines the desired state of Registry
+            description: RegistrySpec defines the desired state of a Registry
             properties:
               authSecretRef:
-                description: AuthSecretRef defines how to authenticate with the remote registry
+                description: |-
+                  AuthSecretRef is the authentication secret reference, used for authentication.
+                  Must be in the same namespace as the catalog.
                 type: string
               mirror:
-                description: Mirror is the mirror URL for the registry
+                description: |-
+                  Mirror registry of the original remote registry.
+                  App store will use the mirror instead of the original registry that is referenced by a catalog.
                 type: string
               remoteURL:
-                description: RemoteURL is the url where we can find the registry
+                description: "RemoteURL is the remote URL of the registry. Supported URI schemes: 'https://' and 'http://'.\n\tDefault is HTTPS if no scheme is given."
                 type: string
               skipTLSVerify:
                 default: false
                 description: Skip TLS Verification on connection
                 type: boolean
               title:
-                description: Title is the UI visible name of this registry
+                description: Title is an UI-friendly name for the catalog.
                 maxLength: 50
                 type: string
             required:
@@ -72,11 +76,11 @@ spec:
             description: RegistryStatus defines the observed state of Registry
             properties:
               error:
-                description: Error last encountered for this registry.
+                description: Error denotes the last error that was encountered by the controller.
                 type: string
               reachable:
                 default: false
-                description: Indicates if the registry is reachable.
+                description: Reachable indicates if the registry is reachable.
                 type: boolean
             required:
             - error

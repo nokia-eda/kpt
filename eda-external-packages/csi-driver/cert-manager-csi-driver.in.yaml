@@ -4,9 +4,9 @@ kind: ServiceAccount
 metadata:
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.8.0
+    helm.sh/chart: cert-manager-csi-driver-v0.10.1
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.0"
+    app.kubernetes.io/version: "v0.10.1"
     app.kubernetes.io/managed-by: Helm
   name: cert-manager-csi-driver
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
@@ -17,9 +17,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.8.0
+    helm.sh/chart: cert-manager-csi-driver-v0.10.1
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.0"
+    app.kubernetes.io/version: "v0.10.1"
     app.kubernetes.io/managed-by: Helm
   name: cert-manager-csi-driver
 rules:
@@ -33,9 +33,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.8.0
+    helm.sh/chart: cert-manager-csi-driver-v0.10.1
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.0"
+    app.kubernetes.io/version: "v0.10.1"
     app.kubernetes.io/managed-by: Helm
   name: cert-manager-csi-driver
 roleRef:
@@ -55,9 +55,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.8.0
+    helm.sh/chart: cert-manager-csi-driver-v0.10.1
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.0"
+    app.kubernetes.io/version: "v0.10.1"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -68,9 +68,9 @@ spec:
       labels:
         app: cert-manager-csi-driver
         app.kubernetes.io/name: cert-manager-csi-driver
-        helm.sh/chart: cert-manager-csi-driver-v0.8.0
+        helm.sh/chart: cert-manager-csi-driver-v0.10.1
         app.kubernetes.io/instance: release-name
-        app.kubernetes.io/version: "v0.8.0"
+        app.kubernetes.io/version: "v0.10.1"
         app.kubernetes.io/managed-by: Helm
       annotations:
         kubectl.kubernetes.io/default-container: cert-manager-csi-driver
@@ -80,7 +80,7 @@ spec:
       - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
       - name: node-driver-registrar
-        image: "ghcr.io/nokia-eda/ext/sig-storage/csi-node-driver-registrar:v2.10.0" # kpt-set: ${CSI_REGISTRAR_IMG}
+        image: "ghcr.io/nokia-eda/ext/sig-storage/csi-node-driver-registrar:v2.12.0" # kpt-set: ${CSI_REGISTRAR_IMG}
         imagePullPolicy: IfNotPresent
         args:
         - -v=1
@@ -115,7 +115,7 @@ spec:
             add: ["SYS_ADMIN"]
           allowPrivilegeEscalation: true
           runAsUser: 0
-        image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-csi-driver:v0.8.0" # kpt-set: ${CSI_DRIVER_IMG}
+        image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-csi-driver:v0.10.1" # kpt-set: ${CSI_DRIVER_IMG}
         imagePullPolicy: IfNotPresent
         args:
         - --log-level=1
@@ -124,6 +124,7 @@ spec:
         - --endpoint=$(CSI_ENDPOINT)
         - --data-root=csi-data-dir
         - --use-token-request=false
+        - --metrics-bind-address=:9402
         env:
         - name: NODE_ID
           valueFrom:
@@ -143,12 +144,16 @@ spec:
         ports:
         - containerPort: 9809
           name: healthz
+        - containerPort: 9402
+          name: http-metrics
         livenessProbe:
           httpGet:
             path: /healthz
             port: healthz
           initialDelaySeconds: 5
           timeoutSeconds: 5
+      nodeSelector:
+        kubernetes.io/os: linux
       volumes:
       - name: plugin-dir
         hostPath:
@@ -174,9 +179,9 @@ metadata:
   name: csi.cert-manager.io
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.8.0
+    helm.sh/chart: cert-manager-csi-driver-v0.10.1
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.8.0"
+    app.kubernetes.io/version: "v0.10.1"
     app.kubernetes.io/managed-by: Helm
 spec:
   podInfoOnMount: true

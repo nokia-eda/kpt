@@ -306,6 +306,7 @@ spec:
                 - eos
                 - sonic
                 - ios-xr
+                - nxos
                 type: string
               platform:
                 description: Platform type of this Node, e.g. 7220 IXR-D3L
@@ -439,6 +440,9 @@ spec:
                       issuerRef:
                         description: Reference to a CertManager issuer that must be used to sign nodes certificates.
                         type: string
+                      skipVerify:
+                        description: Skip certificate verification.
+                        type: boolean
                       trustBundle:
                         description: |-
                           Reference to configMap that contains a CA certificate that is used to verify the node certificate

@@ -11,6 +11,11 @@ spec:
         matchLabels:
           eda.nokia.com/ca: "node"
       key: "ca.crt"
+  - configMap:
+      selector:
+        matchLabels:
+          eda.nokia.com/ca: "node"
+      key: "ca.crt"
   target:
     configMap:
       key: "trust-bundle.pem"

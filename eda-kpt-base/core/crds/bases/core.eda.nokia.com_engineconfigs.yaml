@@ -73,6 +73,9 @@ spec:
               api:
                 description: Settings related to APIServer.
                 properties:
+                  enableLoadBalancerNodePorts:
+                    description: For the service enable the creation of nodePort
+                    type: boolean
                   image:
                     description: The full URI to the image
                     type: string
@@ -83,6 +86,32 @@ spec:
                     description: The number of replicas to launch
                     format: int32
                     type: integer
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
+                  serviceType:
+                    default: LoadBalancer
+                    description: Describes the type of k8s service
+                    enum:
+                    - ClusterIP
+                    - NodePort
+                    - LoadBalancer
+                    type: string
                 type: object
               appStore:
                 description: Settings related to AppStore.
@@ -93,6 +122,52 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
+                type: object
+              appStoreFlow:
+                description: Settings related to AppStore installer workflow.
+                properties:
+                  image:
+                    description: The full URI to the image
+                    type: string
+                  image-credential:
+                    description: The credential to use when interacting with the image
+                    type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               artifactServer:
                 description: Settings related to ArtifactServer.
@@ -103,6 +178,24 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               bootstrapServer:
                 description: Settings related to BootstrapServer.
@@ -113,6 +206,52 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
+                type: object
+              certChecker:
+                description: Settings related to CertChecker.
+                properties:
+                  image:
+                    description: The full URI to the image
+                    type: string
+                  image-credential:
+                    description: The credential to use when interacting with the image
+                    type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               certificate-git-repo:
                 description: Settings related to the certificate backup
@@ -151,6 +290,18 @@ spec:
                       ipv6Address:
                         description: The external IPv6 address of the cluster
                         type: string
+                    type: object
+                  internal:
+                    description: Configure how this cluster is presented at the k8s edge. This is used to configure the eda-api service.
+                    properties:
+                      httpPort:
+                        description: HTTP port used by api service
+                        format: int32
+                        type: integer
+                      httpsPort:
+                        description: HTTPS port used by api service
+                        format: int32
+                        type: integer
                     type: object
                   redundancy:
                     description: Configure the redundancy of the cluster. This is used to configure how the cluster members communicate with each other, and how they authenticate each other.
@@ -217,6 +368,24 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               cxCluster:
                 description: Settings related to remote CX Cluster.
@@ -242,6 +411,24 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               git:
                 description: Settings related to git servers, used for storing and recovering the state of the cluster.
@@ -278,6 +465,24 @@ spec:
                     description: The number of replicas to launch
                     format: int32
                     type: integer
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               identity-git-repo:
                 description: Settings related to user identities
@@ -299,6 +504,24 @@ spec:
                     description: The number of replicas to launch
                     format: int32
                     type: integer
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               kubernetes:
                 description: Settings related to interactions with Kubernetes.
@@ -336,7 +559,7 @@ spec:
                       type: object
                     type: array
                   imports:
-                    description: List of GVKs to export to kubernetes.  By default, any CR used by a script will already have its spec imported
+                    description: List of GVKs to import from kubernetes.  By default, any CR used by a script will already have its spec imported.
                     items:
                       properties:
                         gvk:
@@ -366,6 +589,14 @@ spec:
                       - policy
                       type: object
                     type: array
+                  mode:
+                    description: |-
+                      Sets the default mode for interacting with resources in Kubernetes.
+                      This controls the set of resources that CE will publish to Kubernetes, and the set of resources that CE will treat as inputs.
+                      This setting can be overridden on a per-resource basis using the imports and exports lists, or by an application within their Manifest.
+                    enum:
+                    - None
+                    type: string
                 type: object
               llm:
                 description: Settings related to the large language model used for natural language processing.
@@ -387,6 +618,24 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               npp:
                 description: Settings related to NPP.
@@ -397,6 +646,24 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               nppNodeLabelSelector:
                 description: |-
@@ -465,6 +732,24 @@ spec:
                     description: The number of replicas to launch
                     format: int32
                     type: integer
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               stateController:
                 description: Settings related to StateController.
@@ -475,6 +760,24 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               stateEngine:
                 description: Settings related to StateEngine.
@@ -489,6 +792,24 @@ spec:
                     description: The number of replicas to launch
                     format: int32
                     type: integer
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               testMan:
                 description: Settings related to TestMan.
@@ -499,6 +820,24 @@ spec:
                   image-credential:
                     description: The credential to use when interacting with the image
                     type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
                 type: object
               user-settings-git-repo:
                 description: Settings related to the user settings git repository.
@@ -528,19 +867,19 @@ spec:
                             activityState:
                               description: The activity state of the cluster member.
                               type: string
-                            inSyncWithActive:
-                              description: Whether this cluster member is in sync with the active cluster.
-                              type: boolean
                             name:
                               description: The name of the cluster member.
                               type: string
                             reachable:
                               description: Whether this cluster member is reachable.
                               type: boolean
+                            synchronized:
+                              description: Whether this cluster member is in sync with the active cluster.
+                              type: boolean
                           required:
-                          - inSyncWithActive
                           - name
                           - reachable
+                          - synchronized
                           type: object
                         type: array
                     type: object

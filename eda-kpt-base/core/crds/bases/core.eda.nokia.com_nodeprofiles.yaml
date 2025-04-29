@@ -315,6 +315,9 @@ spec:
               license:
                 description: ConfigMap containing a license for TopoNodes referencing this NodeProfile.
                 type: string
+              llmDb:
+                description: URL containing LLDB  to use when interacting with LLM-DB and OpenAI for query autocompletion, e.g. http://eda-asvr/llmdb/ce-llm-db-srlinux-24.7.1.tar.gz.
+                type: string
               nodeUser:
                 description: Reference to a NodeUser to use for authentication to TopoNodes referencing this NodeProfile.
                 type: string
@@ -329,6 +332,7 @@ spec:
                 enum:
                 - srl
                 - sros
+                - nxos
                 type: string
               platformPath:
                 description: JSPath to use for retrieving the version string from TopoNodes referencing this NodeProfile, e.g. .platform.chassis.type.

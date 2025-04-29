@@ -1,0 +1,12 @@
+apiVersion: artifacts.eda.nokia.com/v1
+kind: Artifact
+metadata:
+  name: eda-api-trustbundle
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  filePath: trust-bundle.pem
+  fromConfigMap:
+    key: trust-bundle.pem
+    name: eda-api-trust-bundle
+    namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  repo: ca

@@ -47,6 +47,11 @@ spec:
                         For Create/Update operations, this is a mandatory json object representing the configuration.
                         For Delete operation, this is an optional json array representing the fields to delete
                       type: string
+                    encrypt:
+                      description: |-
+                        Encrypt the payload of the config.
+                        For Delete operation, this does not apply.
+                      type: boolean
                     operation:
                       description: Operation to perform on the configuration
                       enum:

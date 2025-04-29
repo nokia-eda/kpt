@@ -1,0 +1,24 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeProfile
+metadata:
+  name: sros-ghcr-25.3.r2
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:
+  nodeUser: admin
+  port: 57400
+  operatingSystem: sros
+  version: 25.3.r2
+  yang: https://eda-asvr.eda-system.svc/eda-system/schemaprofiles/sros-ghcr-25.3.r2/sros-25.3.r2.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/schemaprofiles/sros-ghcr-25.3.r2/sros-25.3.r2.zip
+  llmDb: https://eda-asvr.eda-system.svc/eda-system/llm-dbs/llm-db-sros-ghcr-25.3.r1/llm-embeddings-sros-25-3-r1.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/llm-dbs/llm-db-sros-ghcr-25.3.r1/llm-embeddings-sros-25-3-r1.tar.gz
+  dhcp:
+    managementPoolv4: 'ipv4-mgmt-pool'
+    dhcp4Options:
+    - option: 6-DomainNameServer
+      value:
+      - 128.251.10.125
+  license: sros-ghcr-25.3.r2-dummy-license
+  images:
+  - image: eda-system/srosimages/sros-25.3.r2 # kpt-set: ${EDA_CORE_NAMESPACE}/srosimages/sros-25.3.r2
+    imageMd5: eda-system/srosimages/sros-25.3.r2-md5 # kpt-set: ${EDA_CORE_NAMESPACE}/srosimages/sros-25.3.r2-md5

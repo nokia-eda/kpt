@@ -48,6 +48,44 @@ spec:
                   For Artifacts that are directories themselves a file name is not required
                 minLength: 1
                 type: string
+              fromConfigMap:
+                description: The secret from which the file is to be hosted in the artifact server
+                properties:
+                  key:
+                    description: Key of the data field
+                    minLength: 1
+                    type: string
+                  name:
+                    description: The name of the configMap
+                    minLength: 1
+                    type: string
+                  namespace:
+                    description: The namespace of the configMap
+                    type: string
+                required:
+                - key
+                - name
+                - namespace
+                type: object
+              fromSecret:
+                description: The secret from which the file is to be hosted in the artifact server
+                properties:
+                  key:
+                    description: Key of the data field
+                    minLength: 1
+                    type: string
+                  name:
+                    description: The name of the secret
+                    minLength: 1
+                    type: string
+                  namespace:
+                    description: The namespace of the secret
+                    type: string
+                required:
+                - key
+                - name
+                - namespace
+                type: object
               git:
                 description: A git hash can be used to pull down the file from git
                 properties:
@@ -111,7 +149,7 @@ spec:
                 - message: repo is immutable
                   rule: self == oldSelf
               secret:
-                description: If provided the secret to use for authenticating or validating the certificate of the server hosting the remote file.
+                description: If provided the secret to use for authenticating
                 type: string
               textFile:
                 properties:
@@ -121,6 +159,9 @@ spec:
                 required:
                 - content
                 type: object
+              trustBundle:
+                description: If provided the configmap contains the trust bundle for https upstream
+                type: string
             required:
             - filePath
             - repo
@@ -140,6 +181,8 @@ spec:
                 type: string
               internalUrl:
                 description: Internal (in cluster) URL where this Artifact is reachable
+                type: string
+              lastExternalAddress:
                 type: string
               observedGeneration:
                 format: int64

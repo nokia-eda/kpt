@@ -41,6 +41,9 @@ spec:
               It is different from IPAllocationPool in that it returns a single zoned IP address, i.e. an IP address with a subnet. For example a 10.1.1.0/24 segment could return 10.1.1.1/24.
               Consult application documentation to know which pool type to use for a given use case.
             properties:
+              publishAllocations:
+                description: If true, allocations in segments will be published to EDB, available to query via EQL and trigger state applications off of.
+                type: boolean
               segments:
                 description: List of segments containing IPv4 or IPv6 addresses to allocate.
                 items:

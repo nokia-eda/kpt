@@ -119,6 +119,14 @@ data:
         @type relabel
         @label @EDAAPPAPISERVERLOGGER
       </match>
+      <match control-plane.git.**>
+        @type relabel
+        @label @EDAFILELOGGER
+      </match>
+      <match control-plane.git-replica.**>
+        @type relabel
+        @label @EDAFILELOGGER
+      </match>
       <match **>
         @type relabel
         @label @EDAERRORDETECTOR

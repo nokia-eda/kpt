@@ -40,6 +40,9 @@ spec:
               IndexAllocationPool is a generic allocation pool supporting allocation of indexes from a set of segments.
               It supports allocating things like VLANs, subinterface indexes, autonomous system numbers, or any other integer-based index.
             properties:
+              publishAllocations:
+                description: If true, allocations in segments will be published to EDB, available to query via EQL and trigger state applications off of.
+                type: boolean
               segments:
                 description: List of segments containing indexes to allocate.
                 items:

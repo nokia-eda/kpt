@@ -3636,6 +3636,10 @@ spec:
                                 type: integer
                               slotStr:
                                 type: string
+                              xiomStr:
+                                items:
+                                  type: string
+                                type: array
                             required:
                             - cardType
                             - slotNumber

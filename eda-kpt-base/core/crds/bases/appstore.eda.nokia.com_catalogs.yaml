@@ -46,43 +46,57 @@ spec:
           metadata:
             type: object
           spec:
-            description: CatalogSpec defines the desired state of Catalog
+            description: CatalogSpec defines the desired state of a Catalog.
             properties:
               authSecretRef:
-                description: AuthSecretRef defines how to authenticate with the remote catalog
+                description: |-
+                  AuthSecretRef is the authentication secret reference, used for authentication.
+                  Must be in the same namespace as the catalog.
                 type: string
               description:
-                description: Description (small) about this catalog need to check max length
+                description: Description is an optional short description of the catalog.
                 maxLength: 70
                 type: string
+              refreshInterval:
+                default: 180
+                description: |-
+                  RefreshInterval tells the controller how often it should check the remote catalog for new updates, in seconds.
+                  Default is 180 seconds. Minimum is 30 seconds for production environments; 10 seconds for test environments.
+                format: int32
+                type: integer
               remoteType:
                 default: git
-                description: RemoteType type of the remote at the moment we only support git
+                description: RemoteType type of the catalog, only 'git' is supported at the moment.
                 enum:
                 - git
                 type: string
               remoteURL:
-                description: RemoteURL is the url where we can find the catalog (ex git repo URL)
+                description: |-
+                  RemoteURL is the HTTP(S) remote URL of the catalog. Supported URI schemes: 'https://' and 'http://'.
+                  Default is HTTPS if no scheme is given.
                 type: string
               skipTLSVerify:
                 default: false
+                description: SkipTLSVerify skips the validity check for the server's certificate. This will make HTTPS connections insecure.
                 type: boolean
               title:
-                description: Title is the UI visible name of this catalog
+                description: Title is an UI-friendly name for the catalog.
                 maxLength: 50
                 type: string
             type: object
           status:
-            description: CatalogStatus defines the observed state of Catalog
+            description: CatalogStatus defines the observed state of a Catalog.
             properties:
               error:
-                description: |-
-                  conditions []
-                  Error last encountered for this catalog.
+                description: Error denotes the last error that was encountered by the controller.
+                type: string
+              lastRefreshTime:
+                description: LastRefreshTime is the last attempt to refresh the catalog cache by the controller.
+                format: date-time
                 type: string
               operational:
                 default: false
-                description: Indicates if the catalog remote is operational.
+                description: Operational reports whether the catalog remote is operational.
                 type: boolean
             type: object
         type: object

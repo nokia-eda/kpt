@@ -56,6 +56,10 @@ spec:
             type: object
           status:
             description: SimNodeStatus defines the observed state of SimNode
+            properties:
+              ipAddress:
+                description: Sim Node IP address
+                type: string
             type: object
         type: object
     served: true

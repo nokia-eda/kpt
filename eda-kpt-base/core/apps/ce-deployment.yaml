@@ -16,6 +16,7 @@ spec:
       labels:
         eda.nokia.com/app-group: control-plane
         eda.nokia.com/app: configengine
+        eda.nokia.com/cert-check-port: "51200"
     spec:
       affinity:
         podAffinity:
@@ -44,7 +45,14 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-ce
-          image: ghcr.io/nokia-eda/core/config-engine:24.12.4 # kpt-set: ${CE_IMG}
+          image: ghcr.io/nokia-eda/core/config-engine:25.4.1 # kpt-set: ${CE_IMG}
+          # resources:
+          #   limits:
+          #     cpu: "2" # kpt-set: ${CE_LIMIT_CPU}
+          #     memory: "2Gi" # kpt-set: ${CE_LIMIT_MEM}
+          #   requests:
+          #     cpu: "1" # kpt-set: ${CE_REQ_CPU}
+          #     memory: "1Gi" # kpt-set: ${CE_REQ_MEM}
           env:
             - name: POD_IP
               valueFrom:

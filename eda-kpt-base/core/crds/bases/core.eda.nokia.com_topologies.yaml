@@ -227,6 +227,9 @@ spec:
                                 - fabric
                                 - mda
                                 - connector
+                                - xiom
+                                - powerShelf
+                                - powerModule
                                 type: string
                               slot:
                                 description: |-
@@ -278,6 +281,7 @@ spec:
                           enum:
                           - srl
                           - sros
+                          - nxos
                           type: string
                         platform:
                           description: Platform type of this TopoNode, e.g. 7220 IXR-D3L.

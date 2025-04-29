@@ -63,6 +63,11 @@ spec:
                     items:
                       type: string
                     type: array
+                  settings:
+                    description: |-
+                      Relative path to the OpenApi spec describing the settings that can be set on this application.
+                      This file should be generated using edabuilder.
+                    type: string
                   source:
                     description: Relative path to the source repository for the application described by this Manfest
                     type: string
@@ -77,6 +82,18 @@ spec:
                 description: A list of components provided in this Manifest
                 items:
                   properties:
+                    bootstrapResource:
+                      description: |-
+                        Bootstrap resource provided in this component.
+                        This may be a path to a resource, or a path to a directory containing resources.
+                        On new namespace creation, bootstrap resources are loaded into the new namespace by default, "bootstrapping" the namespace.
+                      properties:
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                      required:
+                      - path
+                      type: object
                     cr:
                       description: Definition of a CR provided in this component
                       properties:
@@ -105,6 +122,9 @@ spec:
                               - readWrite
                               type: string
                           type: object
+                        conversionScript:
+                          description: Relative path to the conversion script for this CRD
+                          type: string
                         kubernetes:
                           description: Define how resources for this CRD will be imported/exported to/from Kubernetes
                           properties:
@@ -150,6 +170,9 @@ spec:
                           required:
                           - name
                           type: object
+                        workflow:
+                          description: If set, resources of this CRD are is in workflows
+                          type: boolean
                       required:
                       - path
                       type: object
@@ -301,22 +324,93 @@ spec:
                 items:
                   properties:
                     appName:
-                      description: The name of an application the application described in this Manifest depends on
+                      description: The name of an application that this Manifest depends on.
                       type: string
+                    kubernetes:
+                      description: |-
+                        Required Kinds to be imported/exported to/from Kubernetes from this application.
+                        This can be used by apps with Kubernetes controllers in them, that depends on other apps with CRDs.
+                      properties:
+                        exports:
+                          description: List of Kinds to ensure are exported to Kubernetes.
+                          items:
+                            properties:
+                              gvk:
+                                description: The group + version + kind to apply the specified policy to
+                                properties:
+                                  group:
+                                    description: The group of the resource to import/export
+                                    type: string
+                                  kind:
+                                    description: The kind of the resource to import/export
+                                    type: string
+                                  version:
+                                    description: The version of the resource to import/export
+                                    type: string
+                                required:
+                                - kind
+                                - version
+                                type: object
+                              policy:
+                                description: The policy to apply to the GVK
+                                enum:
+                                - all
+                                type: string
+                            required:
+                            - gvk
+                            - policy
+                            type: object
+                          type: array
+                        imports:
+                          description: List of Kinds to ensure are imported from Kubernetes.
+                          items:
+                            properties:
+                              gvk:
+                                description: The group + version + kind to apply the specified policy to
+                                properties:
+                                  group:
+                                    description: The group of the resource to import/export
+                                    type: string
+                                  kind:
+                                    description: The kind of the resource to import/export
+                                    type: string
+                                  version:
+                                    description: The version of the resource to import/export
+                                    type: string
+                                required:
+                                - kind
+                                - version
+                                type: object
+                              policy:
+                                description: The policy to apply to the GVK
+                                enum:
+                                - all
+                                - spec
+                                type: string
+                            required:
+                            - gvk
+                            - policy
+                            type: object
+                          type: array
+                      type: object
                     state:
                       default: Present
-                      description: The state of the dependency, either Present or Absent
+                      description: The state of the dependency, either Present or Absent.
                       enum:
                       - Present
                       - Absent
                       type: string
+                    vendor:
+                      description: The vendor of an application that this Manifest depends on.
+                      type: string
                     version:
                       description: |-
-                        The version of the application the application described in this Manifest depends on or requires to be absent.
-                        Supported values are semantic versioning, e.g. 1.0.1, 'any', meaning any version, or operator+semver, e.g. <1.0.1, >1.0.1, <=1.0.1, >=1.0.1.
+                        The version of the application this Manifest depends on or requires to be absent.
+                        Supported values are semantic versions, basic comparisons, wildcards, e.g. v1.0.1, <=v1.0.1, >=v1.0.1, '*' (any version), v2.0.*
                       type: string
                   required:
                   - appName
+                  - vendor
                   - version
                   type: object
                 type: array
@@ -337,8 +431,8 @@ spec:
                 description: The Version components and their respective Kinds reside in
                 type: string
             required:
-            - components
             - group
+            - supportedCoreVersions
             - title
             - version
             type: object

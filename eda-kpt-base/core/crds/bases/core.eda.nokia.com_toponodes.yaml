@@ -76,6 +76,9 @@ spec:
                       - fabric
                       - mda
                       - connector
+                      - xiom
+                      - powerShelf
+                      - powerModule
                       type: string
                     slot:
                       description: |-
@@ -127,6 +130,7 @@ spec:
                 enum:
                 - srl
                 - sros
+                - nxos
                 type: string
               platform:
                 description: Platform type of this TopoNode, e.g. 7220 IXR-D3L.
@@ -168,10 +172,13 @@ spec:
                 description: Address and port used to connected to the node.
                 type: string
               node-state:
-                description: The current state of the connection between NPP and the node.
+                description: "The current state of the connection between NPP and the node.\n\"TryingToConnect\"\n   NPP is attempting to connect and establish connectivity to the node\n\"WaitingForInitialCfg\"\n   NPP is connected to the node but waiting for intial config to push\n\"Committing\"\n\t  NPP is in progress of commiting\n\"RetryingCommit\"\n   NPP lost sync to node and is re-pushing current config\n\"Synced\"\n   NPP is in fully synced state\n\"Standby\"\n   NPP is running in standby mode. This state is only used on standby clusters with georedundancy.\n\"NoIpAddress\"\n   NPP is running but there is no IP address for node. This only happen in sim setups when\n   CX has not created the simulated node, or the simulated pod failed to launch due to image error."
                 type: string
               npp-details:
                 description: NPP address and port for this TopoNode.
+                type: string
+              npp-pod:
+                description: NPP pod name
                 type: string
               npp-state:
                 description: The current state of the connection between ConfigEngine and NPP.

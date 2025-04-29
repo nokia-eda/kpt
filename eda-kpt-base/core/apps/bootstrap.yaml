@@ -35,7 +35,7 @@ spec:
   bufferSize: 65535
   destHost: eda-dhcpv6
   destPort: 547
-  proxyPort: 547
+  proxyPort: 547 # kpt-set: ${INT_DHCPV6_PORT}
   idleTimeout: 60
 ---
 apiVersion: core.eda.nokia.com/v1
@@ -47,5 +47,5 @@ spec:
   bufferSize: 65535
   destHost: eda-dhcp
   destPort: 67
-  proxyPort: 67
+  proxyPort: 67 # kpt-set: ${INT_DHCPV4_PORT}
   idleTimeout: 60

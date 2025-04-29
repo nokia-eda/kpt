@@ -45,6 +45,19 @@ spec:
           spec:
             description: WorkflowDefinitionSpec defines the desired state of FlowDefinition
             properties:
+              flowDefinitionResource:
+                description: the resource type to be used for this flow, can only be set if Schema is not set
+                properties:
+                  group:
+                    type: string
+                  kind:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - kind
+                - version
+                type: object
               flowDefinitionSchema:
                 description: the schema for the flow, can only be set if Resource is not set
                 properties:

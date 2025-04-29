@@ -11,6 +11,7 @@ spec:
   versionPath: .system.information.version
   versionMatch: v24\.10\.3.*
   yang: https://eda-asvr.eda-system.svc/eda-system/schemaprofiles/srlinux-ghcr-24.10.3/srlinux-24.10.3.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/schemaprofiles/srlinux-ghcr-24.10.3/srlinux-24.10.3.zip
+  llmDb: https://eda-asvr.eda-system.svc/eda-system/llm-dbs/llm-db-srlinux-ghcr-24.10.3/llm-embeddings-srl-24-10-3.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/llm-dbs/llm-db-srlinux-ghcr-24.10.3/llm-embeddings-srl-24-10-3.tar.gz
   dhcp:
     managementPoolv4: 'ipv4-mgmt-pool'
     dhcp4Options:

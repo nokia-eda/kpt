@@ -1,12 +1,12 @@
 apiVersion: core.eda.nokia.com/v1
 kind: NodeSecurityProfile
 metadata:
-  name: unmanaged-tls
+  name: unmanaged-tls-skip-verify
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
   labels:
     eda.nokia.com/bootstrap: "true"
 spec:
   nodeSelector:
-    - "eda.nokia.com/security-profile=unmanaged"
+    - "eda.nokia.com/security-profile=unmanagedSkipVerify"
   tls:
-    trustBundle: "eda-node-trust-bundle"
+    skipVerify: true

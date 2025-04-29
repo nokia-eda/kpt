@@ -49,6 +49,9 @@ spec:
                       - fabric
                       - mda
                       - connector
+                      - xiom
+                      - powerShelf
+                      - powerModule
                       type: string
                     slot:
                       description: |-

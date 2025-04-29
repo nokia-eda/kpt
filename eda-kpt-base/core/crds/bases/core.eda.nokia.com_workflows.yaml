@@ -86,6 +86,7 @@ spec:
                 - WaitingForInput
                 - Running
                 - WaitingToStart
+                - SubflowWaitingForInput
                 type: string
               stages:
                 description: Results of the stages in this Flow
@@ -106,6 +107,7 @@ spec:
                       - Failed
                       - Pending
                       - Skipped
+                      - Aborted
                       type: string
                     subflows:
                       description: Subflows of this stage.
@@ -116,6 +118,11 @@ spec:
                   - name
                   - result
                   type: object
+                type: array
+              subflowswaitingforinput:
+                description: List of Ids of the Subflows waiting for input
+                items:
+                  type: integer
                 type: array
             required:
             - result

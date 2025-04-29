@@ -25,7 +25,7 @@ spec:
           service:
             name: eda-api
             port:
-              number: 443
+              number: 443 # kpt-set: ${INT_HTTPS_PORT}
   ingressClassName: nginx
   # tls:
   # - hosts:

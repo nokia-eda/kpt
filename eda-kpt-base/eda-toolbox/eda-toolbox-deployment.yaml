@@ -44,7 +44,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-toolbox
-          image: ghcr.io/nokia-eda/core/eda-toolbox:24.12.4 # kpt-set: ${EDA_TOOLBOX_IMG}
+          image: ghcr.io/nokia-eda/core/eda-toolbox:25.4.1 # kpt-set: ${EDA_TOOLBOX_IMG}
           env:
             - name: EDA_POD_NAME
               valueFrom:
@@ -61,6 +61,10 @@ spec:
               name: tls
             - mountPath: /var/run/eda/tls/internal/trust
               name: trustbundle
+            - mountPath: /var/run/eda/tls/node
+              name: node-trustbundle
+            - mountPath: /var/run/eda/tls/api
+              name: api-trustbundle
       volumes:
         - csi:
             driver: csi.cert-manager.io
@@ -74,3 +78,13 @@ spec:
             name: eda-internal-trust-bundle
             optional: false
           name: trustbundle
+        - configMap:
+            defaultMode: 420
+            name: eda-node-trust-bundle
+            optional: false
+          name: node-trustbundle
+        - configMap:
+            defaultMode: 420
+            name: eda-api-trust-bundle
+            optional: false
+          name: api-trustbundle
