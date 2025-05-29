@@ -146,6 +146,17 @@ spec:
                         path:
                           description: Relative path in the local application repository
                           type: string
+                        resourceType:
+                          default: Transactional
+                          description: |-
+                            The type of the resource that this CRD defines. Transactional resources are processed via ConfigEngine,
+                            Kubernetes resources are not exposed in the EDA API, and are not processed via ConfigEngine.
+                            Use Transactional for intent-based resources, or any resources you wish EDA to persist/restore.
+                            Use Kubernetes for resources that are managed by Kubernetes, that you do not want EDA to process in transactions or persist/restore.
+                          enum:
+                          - Transactional
+                          - Kubernetes
+                          type: string
                         schema:
                           description: Relative path to the schema to use with this CRD
                           type: string

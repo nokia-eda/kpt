@@ -44,7 +44,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-toolbox
-          image: ghcr.io/nokia-eda/core/eda-toolbox:25.4.1 # kpt-set: ${EDA_TOOLBOX_IMG}
+          image: ghcr.io/nokia-eda/core/eda-toolbox:25.4.2 # kpt-set: ${EDA_TOOLBOX_IMG}
           env:
             - name: EDA_POD_NAME
               valueFrom:
