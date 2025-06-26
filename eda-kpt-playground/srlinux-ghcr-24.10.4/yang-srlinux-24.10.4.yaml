@@ -7,4 +7,4 @@ spec:
   repo: schemaprofiles
   filePath: srlinux-24.10.4.zip
   remoteFileUrl:
-    fileUrl: https://github.com/nokia/srlinux-yang-models/releases/download/v24.10.4/srlinux-24.10.4-244.zip # kpt-set: ${YANG_REMOTE_URL}/srlinux-24.10.4-244.zip
+    fileUrl: https://github.com/nokia-eda/schema-profiles/releases/download/nokia-srl-24.10.4/srlinux-24.10.4-244-v2.zip # kpt-set: ${YANG_REMOTE_URL}/srlinux-24.10.4-244-v2.zip
