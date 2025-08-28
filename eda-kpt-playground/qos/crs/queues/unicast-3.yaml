@@ -1,4 +1,4 @@
-apiVersion: qos.eda.nokia.com/v1alpha1
+apiVersion: qos.eda.nokia.com/v1
 kind: Queue
 metadata:
   name: unicast-3

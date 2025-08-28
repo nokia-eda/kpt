@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: eda-bsvr-admin
+subjects:
+- kind: ServiceAccount
+  name: eda-bsvr
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+roleRef:
+  kind: ClusterRole
+  name: eda-bsvr-admin
+  apiGroup: rbac.authorization.k8s.io

@@ -45,7 +45,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-ce
-          image: ghcr.io/nokia-eda/core/config-engine:25.4.3 # kpt-set: ${CE_IMG}
+          image: ghcr.io/nokia-eda/core/config-engine:25.8.1 # kpt-set: ${CE_IMG}
           # resources:
           #   limits:
           #     cpu: "2" # kpt-set: ${CE_LIMIT_CPU}
@@ -70,6 +70,8 @@ spec:
               value: "" # kpt-set: ${https_proxy}
             - name: no_proxy
               value: "" # kpt-set: ${no_proxy}
+            - name: POD_NAMESPACE_IN_CSI
+              value: "" # kpt-set: ${POD_NAMESPACE_IN_CSI}
           volumeMounts:
             - mountPath: /var/run/eda/tls/internal/client
               name: tls
@@ -84,7 +86,7 @@ spec:
             driver: csi.cert-manager.io
             readOnly: true
             volumeAttributes:
-              csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda
+              csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE}.svc,aggsvr-svc.${POD_NAMESPACE}.svc.cluster,aggsvr-svc.${POD_NAMESPACE}.svc.cluster.local # kpt-set: eda-ce,eda-ce.${POD_NAMESPACE_IN_CSI}.svc,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster.local
               csi.cert-manager.io/issuer-name: eda-internal-issuer
           name: tls
         - configMap:
@@ -96,7 +98,7 @@ spec:
             driver: csi.cert-manager.io
             readOnly: true
             volumeAttributes:
-              csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda
+              csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE}.svc,aggsvr-svc.${POD_NAMESPACE}.svc.cluster,aggsvr-svc.${POD_NAMESPACE}.svc.cluster.local # kpt-set: eda-ce,eda-ce.${POD_NAMESPACE_IN_CSI}.svc,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster.local
               csi.cert-manager.io/issuer-name: eda-api-issuer
           name: georedundant-tls
         - configMap:

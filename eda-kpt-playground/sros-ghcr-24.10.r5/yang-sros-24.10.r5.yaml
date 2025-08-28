@@ -1,0 +1,10 @@
+apiVersion: artifacts.eda.nokia.com/v1
+kind: Artifact
+metadata:
+  name: sros-ghcr-24.10.r5
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  repo: schemaprofiles
+  filePath: sros-24.10.r5.zip
+  remoteFileUrl:
+    fileUrl: https://github.com/nokia-eda/schema-profiles/releases/download/nokia-sros-v24.10.r5/sros-24.10.r5.zip # kpt-set: ${YANG_REMOTE_URL}/sros-24.10.r5.zip

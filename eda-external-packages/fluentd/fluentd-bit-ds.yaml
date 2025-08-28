@@ -101,6 +101,8 @@ spec:
       - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
       - name: fluent-bit
+        securityContext:
+          privileged: true
         image: ghcr.io/nokia-eda/core/fluent-bit:3.0.7-amd64 # kpt-set: ${FB_IMG}
         env:
         - name: FLUENTD_HOST

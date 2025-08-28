@@ -11,7 +11,7 @@ spec:
   operatingSystem: sros
   version: 25.3.r2
   yang: https://eda-asvr.eda-system.svc/eda-system/schemaprofiles/sros-ghcr-25.3.r2/sros-25.3.r2.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/schemaprofiles/sros-ghcr-25.3.r2/sros-25.3.r2.zip
-  llmDb: https://eda-asvr.eda-system.svc/eda-system/llm-dbs/llm-db-sros-ghcr-25.3.r1/llm-embeddings-sros-25-3-r1.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/llm-dbs/llm-db-sros-ghcr-25.3.r1/llm-embeddings-sros-25-3-r1.tar.gz
+  llmDb: https://eda-asvr.eda-system.svc/eda-system/llm-dbs/llm-db-sros-ghcr-25.3.r2/llm-embeddings-sros-25-3-r2.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/llm-dbs/llm-db-sros-ghcr-25.3.r2/llm-embeddings-sros-25-3-r2.tar.gz
   dhcp:
     managementPoolv4: 'ipv4-mgmt-pool'
     dhcp4Options:

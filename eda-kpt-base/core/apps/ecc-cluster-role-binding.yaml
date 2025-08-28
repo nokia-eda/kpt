@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: eda-cert-checker-admin
+subjects:
+- kind: ServiceAccount
+  name: eda-cert-checker
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+roleRef:
+  kind: ClusterRole
+  name: eda-cert-checker-admin
+  apiGroup: rbac.authorization.k8s.io

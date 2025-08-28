@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eda-fluentbit-collector
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/app: fluentbit-collector
+    eda.nokia.com/app-group: control-plane
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      eda.nokia.com/app: fluentbit-collector
+  template:
+    metadata:
+      labels:
+        eda.nokia.com/app-group: control-plane
+        eda.nokia.com/app: fluentbit-collector
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: eda.nokia.com/app-group
+                      operator: In
+                      values:
+                        - control-plane
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: eda.nokia.com/app-group
+                    operator: In
+                    values:
+                      - control-plane
+      imagePullSecrets:
+        - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
+      containers:
+        - name: fluent-bit-collector
+          image: ghcr.io/nokia-eda/core/eda-fluentbit-collector:v4.0.1-debian-1.0 # kpt-set: ${FO_FC_IMG}
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: fluent-bit-collector-config
+              mountPath: /fluent-bit/etc/fluent-bit.conf
+              subPath: fluent-bit.conf
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+      volumes:
+        - name: fluent-bit-collector-config
+          configMap:
+            name: fluent-bit-collector-config
+      terminationGracePeriodSeconds: 10
+
+# TODO: Delete this
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: eda-rsyslog
+#   namespace: ${EDA_CORE_NAMESPACE} # kpt-set: ${EDA_CORE_NAMESPACE}
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: rsyslog
+#   template:
+#     metadata:
+#       labels:
+#         app: rsyslog
+#     spec:
+#       containers:
+#         - name: rsyslog
+#           image: voxxit/rsyslog:latest
+#           ports:
+#             - containerPort: 514
+#               protocol: UDP
+#             - containerPort: 514
+#               protocol: TCP
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: rsyslog-service
+#   namespace: ${EDA_CORE_NAMESPACE} # kpt-set: ${EDA_CORE_NAMESPACE}
+# spec:
+#   ports:
+#     - port: 514
+#       name: syslog-tcp
+#       targetPort: 514
+#       protocol: TCP
+#     - port: 514
+#       name: syslog-udp
+#       targetPort: 514
+#       protocol: UDP
+#   selector:
+#     app: rsyslog
+# ---
+# apiVersion: fluentbit.fluent.io/v1alpha2
+# kind: ClusterOutput
+# metadata:
+#   name: app-logs-output1
+#   labels:
+#       fluentbit.fluent.io/enabled: "true"
+#       fluentbit.agent: "true"
+# spec:
+#   match: kube.*
+#   syslog:
+#     host: rsyslog-service.${EDA_CORE_NAMESPACE}.svc" # kpt-set: rsyslog-service.${EDA_CORE_NAMESPACE}.svc
+#     port: 514
+#     mode: udp
+#     syslogFormat: rfc5424
+#     syslogMaxSize: 2048
+#     syslogMessageKey: log
+#     syslogHostnameKey: kube_container_name
+#     syslogAppnameKey: appname
+# ---

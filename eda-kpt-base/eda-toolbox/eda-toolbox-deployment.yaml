@@ -44,7 +44,10 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-toolbox
-          image: ghcr.io/nokia-eda/core/eda-toolbox:25.4.3 # kpt-set: ${EDA_TOOLBOX_IMG}
+          image: ghcr.io/nokia-eda/core/eda-toolbox:25.8.1 # kpt-set: ${EDA_TOOLBOX_IMG}
+          # In Openshift environment we uncomment the below lines
+          # securityContext:
+          #   privileged: true
           env:
             - name: EDA_POD_NAME
               valueFrom:
@@ -70,7 +73,7 @@ spec:
             driver: csi.cert-manager.io
             readOnly: true
             volumeAttributes:
-              csi.cert-manager.io/dns-names: eda-toolbox,eda-toolbox.${POD_NAMESPACE}.svc,eda-toolbox.${POD_NAMESPACE}.svc.cluster,eda-toolbox.${POD_NAMESPACE}.svc.cluster.local,eda
+              csi.cert-manager.io/dns-names: eda-toolbox,eda-toolbox.${POD_NAMESPACE}.svc,eda-toolbox.${POD_NAMESPACE}.svc.cluster,eda-toolbox.${POD_NAMESPACE}.svc.cluster.local,eda # kpt-set: eda-toolbox,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc.cluster,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,eda
               csi.cert-manager.io/issuer-name: eda-internal-issuer
           name: tls
         - configMap:

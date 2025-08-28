@@ -7,7 +7,7 @@ metadata:
     eda.nokia.com/app: git-replica
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteOnce # kpt-set: ${GOGS_REPLICA_PV_CLAIM_ACCESSMODE}
   resources:
     requests:
       storage: 24Gi # kpt-set: ${GOGS_REPLICA_PV_CLAIM_SIZE}

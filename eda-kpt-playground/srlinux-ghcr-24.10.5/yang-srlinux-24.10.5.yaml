@@ -1,0 +1,10 @@
+apiVersion: artifacts.eda.nokia.com/v1
+kind: Artifact
+metadata:
+  name: srlinux-ghcr-24.10.5
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  repo: schemaprofiles
+  filePath: srlinux-24.10.5.zip
+  remoteFileUrl:
+    fileUrl: https://github.com/nokia-eda/schema-profiles/releases/download/nokia-srl-24.10.5/srlinux-24.10.5-344.zip # kpt-set: ${YANG_REMOTE_URL}/srlinux-24.10.5-344.zip

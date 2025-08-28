@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluentbit-collector
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/app: fluentbit-collector
+spec:
+  ports:
+  - port: 2020
+    protocol: TCP
+  selector:
+    eda.nokia.com/app: fluentbit-collector

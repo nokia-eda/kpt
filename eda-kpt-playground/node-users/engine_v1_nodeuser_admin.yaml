@@ -7,7 +7,7 @@ metadata:
     eda.nokia.com/bootstrap: "true"
 spec:
   username: admin
-  password: eda124!
+  password: NokiaSrl1!
   groupBindings:
   - nodeSelector:
     - ""

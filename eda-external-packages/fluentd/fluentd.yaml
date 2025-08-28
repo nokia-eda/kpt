@@ -127,6 +127,10 @@ data:
         @type relabel
         @label @EDAFILELOGGER
       </match>
+      <match control-plane.eda-toolbox.**>
+        @type relabel
+        @label @EDAFILELOGGER
+      </match>
       <match **>
         @type relabel
         @label @EDAERRORDETECTOR
@@ -352,6 +356,8 @@ spec:
       containers:
         - name: eda-fluentd
           image: ghcr.io/nokia-eda/core/fluentd:v1.17.0-debian-1.0 # kpt-set: ${FD_IMG}
+          securityContext:
+            privileged: true
           volumeMounts:
             - name: fluentd-config-volume
               mountPath: /fluentd/etc/edafluent.conf

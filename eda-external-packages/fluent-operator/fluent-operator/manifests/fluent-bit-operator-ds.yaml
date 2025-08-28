@@ -1,0 +1,133 @@
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterParser
+metadata:
+  name: cri
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+  annotations:
+    config.kubernetes.io/depends-on: apps/namespaces/eda-system/Deployment/fluent-operator # kpt-set: apps/namespaces/${EDA_CORE_NAMESPACE}/Deployment/fluent-operator
+spec:
+  regex:
+    timeKey: time
+    timeFormat: "%Y-%m-%dT%H:%M:%S.%L"
+    regex: ^(?<time>[^ ]+) (?<stream>stdout|stderr) [^ ]+ (?<log>.*)$
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFluentBitConfig
+metadata:
+  labels:
+    app.kubernetes.io/name: fluent-bit
+  name: fluent-bit-config
+  annotations:
+    config.kubernetes.io/depends-on: apps/namespaces/eda-system/Deployment/fluent-operator # kpt-set: apps/namespaces/${EDA_CORE_NAMESPACE}/Deployment/fluent-operator
+spec:
+  service:
+    logLevel: info
+    parsersFile: parsers.conf
+    daemon: false
+    flushSeconds: 1
+  filterSelector:
+    matchLabels:
+      fluentbit.fluent.io/enabled: "true"
+      fluentbit.agent: "true"
+  inputSelector:
+    matchLabels:
+      fluentbit.fluent.io/enabled: "true"
+      fluentbit.agent: "true"
+  outputSelector:
+    matchLabels:
+      fluentbit.fluent.io/enabled: "true"
+      fluentbit.agent: "true"
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: FluentBit
+metadata:
+  name: fluent-bit
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    app.kubernetes.io/name: fluent-bit
+  annotations:
+    config.kubernetes.io/depends-on: apps/namespaces/eda-system/Deployment/fluent-operator # kpt-set: apps/namespaces/${EDA_CORE_NAMESPACE}/Deployment/fluent-operator
+spec:
+  image: ghcr.io/nokia-eda/ext/fluent/fluent-operator/fluent-bit:v4.0.1 # kpt-set: ${FO_FB_IMG}
+  imagePullSecrets:
+  - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
+  positionDB:
+    emptyDir: {}
+  resources:
+    requests:
+      cpu: 10m
+      memory: 25Mi
+    limits:
+      cpu: 500m
+      memory: 200Mi
+  fluentBitConfigName: fluent-bit-config
+  tolerations:
+  - operator: Exists
+  containerSecurityContext:
+    privileged: true
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterInput
+metadata:
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.agent: "true"
+  name: tail
+  annotations:
+    config.kubernetes.io/depends-on: apps/namespaces/eda-system/Deployment/fluent-operator # kpt-set: apps/namespaces/${EDA_CORE_NAMESPACE}/Deployment/fluent-operator
+spec:
+  tail:
+    db: /fluent-bit/tail/pos.db
+    dbSync: Normal
+    memBufLimit: 250MB
+    parser: cri
+    path: /var/log/containers/eda*.log
+    excludePath: /var/log/containers/eda-fluent*.log
+    readFromHead: false
+    refreshIntervalSeconds: 5
+    skipLongLines: true
+    tag: kube.*
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterFilter
+metadata:
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.agent: "true"
+  name: containerd
+  annotations:
+    config.kubernetes.io/depends-on: apps/namespaces/eda-system/Deployment/fluent-operator # kpt-set: apps/namespaces/${EDA_CORE_NAMESPACE}/Deployment/fluent-operator
+spec:
+  match: kube.*
+  filters:
+  - kubernetes:
+      k8sLoggingParser: true
+      k8sLoggingExclude: false
+      mergeLog: true
+      keepLog: true
+  - nest:
+      operation: lift
+      nestedUnder: kubernetes
+      addPrefix: kube_
+  - nest:
+      operation: lift
+      nestedUnder: kube_labels
+  - rewriteTag:
+      rules:
+      - "$kube_namespace_name ^(.*)$ eda.$kube_namespace_name.$kube_pod_name.$kube_container_name false"
+---
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterOutput
+metadata:
+  name: app-logs-output
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+    fluentbit.agent: "true"
+  annotations:
+    config.kubernetes.io/depends-on: apps/namespaces/eda-system/Deployment/fluent-operator # kpt-set: apps/namespaces/${EDA_CORE_NAMESPACE}/Deployment/fluent-operator
+spec:
+  match: eda.*
+  forward:
+    host: fluentbit-collector.eda-system.svc # kpt-set: fluentbit-collector.${EDA_CORE_NAMESPACE}.svc
+    port: 2020

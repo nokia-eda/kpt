@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.4
+    controller-gen.kubebuilder.io/version: v0.18.0
   name: workflows.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -16,12 +16,6 @@ spec:
   - additionalPrinterColumns:
     - jsonPath: .spec.type
       name: Type
-      type: string
-    - jsonPath: .status.id
-      name: ID
-      type: integer
-    - jsonPath: .status.result
-      name: Result
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
@@ -63,69 +57,9 @@ spec:
           status:
             description: WorkflowStatus defines the observed state of Flow
             properties:
-              duration:
-                description: Total duration of the Flow in milliseconds
-                format: int64
-                type: integer
-              errors:
-                items:
-                  type: string
-                type: array
-              id:
-                description: Id
-                type: integer
               output:
                 description: Output from this flow, adhering to the JSON schema defined in the referenced FlowDefinition
                 x-kubernetes-preserve-unknown-fields: true
-              result:
-                description: Aggregate result of the Flow
-                enum:
-                - OK
-                - Failed
-                - Terminated
-                - WaitingForInput
-                - Running
-                - WaitingToStart
-                - SubflowWaitingForInput
-                type: string
-              stages:
-                description: Results of the stages in this Flow
-                items:
-                  properties:
-                    duration:
-                      description: Duration of the stage in milliseconds.
-                      format: int64
-                      type: integer
-                    name:
-                      description: Name of the stage.
-                      type: string
-                    result:
-                      description: Result of the stage.
-                      enum:
-                      - OK
-                      - Running
-                      - Failed
-                      - Pending
-                      - Skipped
-                      - Aborted
-                      type: string
-                    subflows:
-                      description: Subflows of this stage.
-                      items:
-                        type: integer
-                      type: array
-                  required:
-                  - name
-                  - result
-                  type: object
-                type: array
-              subflowswaitingforinput:
-                description: List of Ids of the Subflows waiting for input
-                items:
-                  type: integer
-                type: array
-            required:
-            - result
             type: object
         type: object
     served: true

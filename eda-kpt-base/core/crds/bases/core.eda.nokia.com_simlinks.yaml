@@ -2,10 +2,10 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.16.4
-  name: simlinks.test.eda.nokia.com
+    controller-gen.kubebuilder.io/version: v0.18.0
+  name: simlinks.core.eda.nokia.com
 spec:
-  group: test.eda.nokia.com
+  group: core.eda.nokia.com
   names:
     kind: SimLink
     listKind: SimLinkList
@@ -54,38 +54,30 @@ spec:
                     local:
                       properties:
                         interface:
-                          description: |-
-                            Normalized name of the interface/port.
-                            For sim, this is the name of the interface as it will appear in the SimNode, for example 'eth0'.
-                            For local, this is the normalized name of the interface in the TopoNode, for example 'ethernet-1-1'.
+                          description: Normalized name of the interface/port, e.g. ethernet-1-1.
                           type: string
                         interfaceResource:
-                          description: Name of an the Interface resource
+                          description: Reference to a Interface.
                           type: string
                         node:
-                          description: Reference to a TopoNode if local, or a SimNode if sim
+                          description: Reference to a TopoNode.
                           type: string
                       required:
-                      - interface
                       - interfaceResource
                       - node
                       type: object
                     sim:
                       properties:
                         interface:
-                          description: |-
-                            Normalized name of the interface/port.
-                            For sim, this is the name of the interface as it will appear in the SimNode, for example 'eth0'.
-                            For local, this is the normalized name of the interface in the TopoNode, for example 'ethernet-1-1'.
+                          description: Normalized name of the interface/port, e.g. ethernet-1-1.
                           type: string
                         interfaceResource:
-                          description: Name of an the Interface resource
+                          description: Reference to a Interface.
                           type: string
                         node:
-                          description: Reference to a TopoNode if local, or a SimNode if sim
+                          description: Reference to a TopoNode.
                           type: string
                       required:
-                      - interface
                       - interfaceResource
                       - node
                       type: object

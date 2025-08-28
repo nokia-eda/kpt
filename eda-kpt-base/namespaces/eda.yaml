@@ -5,4 +5,7 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
   labels:
     eda.nokia.com/bootstrap: "true"
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
 spec:

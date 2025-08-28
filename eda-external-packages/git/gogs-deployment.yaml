@@ -43,7 +43,8 @@ spec:
       containers:
         - name: gogs
           image: ghcr.io/nokia-eda/core/gogs:0.13.0 # kpt-set: ${GOGS_IMG_TAG}
-          #image: gogs/gogs:latest
+          securityContext:
+            privileged: true
           ports:
             - containerPort: 22
               name: ssh
