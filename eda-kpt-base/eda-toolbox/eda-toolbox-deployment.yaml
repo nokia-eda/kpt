@@ -44,7 +44,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-toolbox
-          image: ghcr.io/nokia-eda/core/eda-toolbox:25.8.1 # kpt-set: ${EDA_TOOLBOX_IMG}
+          image: ghcr.io/nokia-eda/core/eda-toolbox:25.8.2 # kpt-set: ${EDA_TOOLBOX_IMG}
           # In Openshift environment we uncomment the below lines
           # securityContext:
           #   privileged: true

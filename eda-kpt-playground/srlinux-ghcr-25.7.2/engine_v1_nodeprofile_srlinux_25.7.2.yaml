@@ -1,0 +1,25 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeProfile
+metadata:
+  name: srlinux-ghcr-25.7.2
+  namespace: default # kpt-set: ${EDA_USER_NAMESPACE}
+spec:
+  nodeUser: admin
+  operatingSystem: srl
+  port: 57400
+  version: 25.7.2
+  versionPath: .system.information.version
+  versionMatch: v25\.7\.2.*
+  yang: https://eda-asvr.default.svc/default/schemaprofiles/srlinux-ghcr-25.7.2/srlinux-25.7.2.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/schemaprofiles/srlinux-ghcr-25.7.2/srlinux-25.7.2.zip
+  dhcp:
+    managementPoolv4: 'ipv4-mgmt-pool'
+    dhcp4Options:
+    - option: 6-DomainNameServer
+      value:
+      - 128.251.10.125
+  license: cx-srl-25-7-2-ghcr-license
+  images:
+  - image: default/srlimages/srlinux-25.7.2-266 # kpt-set: ${EDA_CORE_NAMESPACE}/srlimages/srlinux-25.7.2-266
+    imageMd5: default/srlimages/srlinux-25.7.2-266-md5 # kpt-set: ${EDA_CORE_NAMESPACE}/srlimages/srlinux-25.7.2-266-md5
+  containerImage: ghcr.io/nokia/srlinux:25.7.2-266 # kpt-set: ${SRL_25_7_2_GHCR}
+  imagePullSecret: core # kpt-set: ${CORE_IMG_CREDENTIALS}
