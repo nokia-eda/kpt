@@ -1,0 +1,10 @@
+apiVersion: artifacts.eda.nokia.com/v1
+kind: Artifact
+metadata:
+  name: llm-db-sros-ghcr-25.7.r1
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  repo: llm-dbs
+  filePath: llm-embeddings-sros-25-7-r1.tar.gz
+  remoteFileUrl:
+    fileUrl: https://github.com/nokia-eda/llm-embeddings/releases/download/nokia-sros-25.7.r1/llm-embeddings-sros-25-7-r1-v1.tar.gz # kpt-set: ${LLM_DB_REMOTE_URL}/llm-embeddings-sros-25-7-r1-v1.tar.gz

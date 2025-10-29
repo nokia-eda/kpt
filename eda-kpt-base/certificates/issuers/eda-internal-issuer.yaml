@@ -24,6 +24,7 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
+  duration: 87600h
   issuerRef:
     name: eda-root-ca-issuer
     kind: Issuer
