@@ -90,12 +90,12 @@ spec:
   selector:
     matchLabels:
       name: eda-fluentbit
-      app: eda-fluentbit
+      eda.nokia.com/app: fluentbit
   template:
     metadata:
       labels:
         name: eda-fluentbit
-        app: eda-fluentbit
+        eda.nokia.com/app: fluentbit
     spec:
       imagePullSecrets:
       - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}

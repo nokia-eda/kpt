@@ -69,13 +69,3 @@ rules:
   verbs:
   - get
   - update
-- apiGroups:
-  - core.eda.nokia.com
-  resources:
-  - toponodes
-  verbs:
-  - get
-  - list
-  - patch
-  - update
-  - watch

@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: ipallocationpools.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -60,6 +60,9 @@ spec:
                         properties:
                           name:
                             description: Name of this allocation.
+                            type: string
+                          poolInstance:
+                            description: Pool instance, if empty applies to all instances.
                             type: string
                           value:
                             description: Allocation to reserve.

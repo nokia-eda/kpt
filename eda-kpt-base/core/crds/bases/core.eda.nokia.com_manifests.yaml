@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: manifests.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -112,6 +112,18 @@ spec:
                     crd:
                       description: Definition of a CRD provided in this component
                       properties:
+                        ai:
+                          description: Settings related to exposure of this resource to EDA's AI.
+                          properties:
+                            matchTags:
+                              description: |-
+                                Tags are used to create indirect relationships, which are in turn matched by LLM agents to include this resource in their capability.
+                                All resources exposed to EDA's AI are available to the top-level AI, but are not automatically exposed to children AI agents.
+                                You may assign tags to AI-exposed resources, and then use those tags when creating an AI agent to automatically include this resource in the agents capability.
+                              items:
+                                type: string
+                              type: array
+                          type: object
                         api:
                           description: Settings related to how this CRD is exposed in the API
                           properties:
@@ -229,6 +241,19 @@ spec:
                       required:
                       - schema
                       - table
+                      type: object
+                    panel:
+                      description: Definition of a UI panel provided in this component
+                      properties:
+                        name:
+                          description: Name of this panel
+                          type: string
+                        path:
+                          description: Relative path in the local application repository
+                          type: string
+                      required:
+                      - name
+                      - path
                       type: object
                     script:
                       description: Definition of a script provided in this component
@@ -370,7 +395,9 @@ spec:
                         Note: not in use currently: use AppName and Vendor.
                       type: string
                     appName:
-                      description: The name of an application that this Manifest depends on.
+                      description: |-
+                        The name of an application that this Manifest depends on.
+                        Deprecated: use appId instead.
                       type: string
                     kubernetes:
                       description: |-
@@ -447,7 +474,9 @@ spec:
                       - Absent
                       type: string
                     vendor:
-                      description: The vendor of an application that this Manifest depends on.
+                      description: |-
+                        The vendor of an application that this Manifest depends on.
+                        Deprecated: use appId instead.
                       type: string
                     version:
                       description: |-
@@ -455,8 +484,6 @@ spec:
                         Supported values are semantic versions, basic comparisons, wildcards, e.g. v1.0.1, <=v1.0.1, >=v1.0.1, '*' (any version), v2.0.*
                       type: string
                   required:
-                  - appName
-                  - vendor
                   - version
                   type: object
                 type: array

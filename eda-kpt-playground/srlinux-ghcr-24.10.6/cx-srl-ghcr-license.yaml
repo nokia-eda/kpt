@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cx-srl-24-10-6-ghcr-license
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+data:
+  license.key: ""

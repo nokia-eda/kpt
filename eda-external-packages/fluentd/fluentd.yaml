@@ -119,15 +119,15 @@ data:
         @type relabel
         @label @EDAAPPAPISERVERLOGGER
       </match>
-      <match control-plane.git.**>
+      <match git-plane.git.**>
         @type relabel
         @label @EDAFILELOGGER
       </match>
-      <match control-plane.git-replica.**>
+      <match git-replica-plane.git-replica.**>
         @type relabel
         @label @EDAFILELOGGER
       </match>
-      <match control-plane.eda-toolbox.**>
+      <match toolbox.eda-toolbox.**>
         @type relabel
         @label @EDAFILELOGGER
       </match>
@@ -314,7 +314,7 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
   labels:
     eda.nokia.com/app: fluentd
-    eda.nokia.com/app-group: control-plane
+    eda.nokia.com/app-group: log-plane
 spec:
   replicas: 1
   selector:
@@ -323,7 +323,7 @@ spec:
   template:
     metadata:
       labels:
-        eda.nokia.com/app-group: control-plane
+        eda.nokia.com/app-group: log-plane
         eda.nokia.com/app: fluentd
     spec:
       affinity:
@@ -336,7 +336,7 @@ spec:
                     - key: eda.nokia.com/app-group
                       operator: In
                       values:
-                        - control-plane
+                        - log-plane
                 topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -346,7 +346,7 @@ spec:
                   - key: eda.nokia.com/app-group
                     operator: In
                     values:
-                      - control-plane
+                      - log-plane
       imagePullSecrets:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       volumes:

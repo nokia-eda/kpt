@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: registries.appstore.eda.nokia.com
 spec:
   group: appstore.eda.nokia.com
@@ -51,12 +51,12 @@ spec:
               authSecretRef:
                 description: |-
                   AuthSecretRef is the authentication secret reference, used for authentication.
-                  Must be in the same namespace as the catalog.
+                  Must be in the same namespace as the registry.
                 type: string
               mirror:
                 description: |-
                   Mirror registry of the original remote registry.
-                  App store will use the mirror instead of the original registry that is referenced by a catalog.
+                  App store will use the mirror instead of the original registry that is referenced by a registry.
                 type: string
               remoteURL:
                 description: "RemoteURL is the remote URL of the registry. Supported URI schemes: 'https://' and 'http://'.\n\tDefault is HTTPS if no scheme is given."
@@ -66,7 +66,7 @@ spec:
                 description: Skip TLS Verification on connection
                 type: boolean
               title:
-                description: Title is an UI-friendly name for the catalog.
+                description: Title is an UI-friendly name for the registry.
                 maxLength: 50
                 type: string
             required:

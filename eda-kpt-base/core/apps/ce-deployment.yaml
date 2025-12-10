@@ -10,6 +10,8 @@ spec:
   selector:
     matchLabels:
       eda.nokia.com/app: configengine
+  strategy:
+    type: Recreate
   replicas: 1
   template:
     metadata:
@@ -30,6 +32,18 @@ spec:
                       values:
                         - control-plane
                 topologyKey: "kubernetes.io/hostname"
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: eda.nokia.com/app-group
+                      operator: In
+                      values:
+                        - git-plane
+                        - git-replica-plane
+                topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
@@ -45,7 +59,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-ce
-          image: ghcr.io/nokia-eda/core/config-engine:25.8.3 # kpt-set: ${CE_IMG}
+          image: ghcr.io/nokia-eda/core/config-engine:25.12.1 # kpt-set: ${CE_IMG}
           # resources:
           #   limits:
           #     cpu: "2" # kpt-set: ${CE_LIMIT_CPU}
@@ -88,6 +102,8 @@ spec:
             volumeAttributes:
               csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE}.svc,aggsvr-svc.${POD_NAMESPACE}.svc.cluster,aggsvr-svc.${POD_NAMESPACE}.svc.cluster.local # kpt-set: eda-ce,eda-ce.${POD_NAMESPACE_IN_CSI}.svc,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster.local
               csi.cert-manager.io/issuer-name: eda-internal-issuer
+              csi.cert-manager.io/duration: 720h # kpt-set: ${EDA_INTERNAL_CERT_DURATION}
+              csi.cert-manager.io/key-algorithm: ECDSA
           name: tls
         - configMap:
             defaultMode: 420
@@ -100,6 +116,7 @@ spec:
             volumeAttributes:
               csi.cert-manager.io/dns-names: eda-ce,eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster,eda-ce.${POD_NAMESPACE}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE}.svc,aggsvr-svc.${POD_NAMESPACE}.svc.cluster,aggsvr-svc.${POD_NAMESPACE}.svc.cluster.local # kpt-set: eda-ce,eda-ce.${POD_NAMESPACE_IN_CSI}.svc,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,eda,aggsvr-svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster.local
               csi.cert-manager.io/issuer-name: eda-api-issuer
+              csi.cert-manager.io/key-algorithm: ECDSA
           name: georedundant-tls
         - configMap:
             defaultMode: 420

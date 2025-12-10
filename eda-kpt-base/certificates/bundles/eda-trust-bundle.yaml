@@ -16,6 +16,11 @@ spec:
         matchLabels:
           eda.nokia.com/ca: "node"
       key: "ca.crt"
+  - configMap:
+      selector:
+        matchLabels:
+          eda.nokia.com/shadow-ca: "node"
+      key: "shadow-trust-bundle.pem"
   target:
     configMap:
       key: "trust-bundle.pem"
@@ -36,6 +41,11 @@ spec:
         matchLabels:
           eda.nokia.com/ca: "api"
       key: "ca.crt"
+  - configMap:
+      selector:
+        matchLabels:
+          eda.nokia.com/shadow-ca: "api"
+      key: "shadow-trust-bundle.pem"
   target:
     configMap:
       key: "trust-bundle.pem"
@@ -56,6 +66,11 @@ spec:
         matchLabels:
           eda.nokia.com/ca: "internal"
       key: "ca.crt"
+  - configMap:
+      selector:
+        matchLabels:
+          eda.nokia.com/shadow-ca: "internal"
+      key: "shadow-trust-bundle.pem"
   target:
     configMap:
       key: "trust-bundle.pem"

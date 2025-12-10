@@ -5,7 +5,7 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_GOGS_NAMESPACE}
   labels:
     eda.nokia.com/app: git
-    eda.nokia.com/app-group: control-plane
+    eda.nokia.com/app-group: git-plane
 spec:
   replicas: 1
   selector:
@@ -15,10 +15,10 @@ spec:
     metadata:
       labels:
         eda.nokia.com/app: git
-        eda.nokia.com/app-group: control-plane
+        eda.nokia.com/app-group: git-plane
     spec:
       affinity:
-        podAffinity:
+        podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 100
               podAffinityTerm:
@@ -27,6 +27,8 @@ spec:
                     - key: eda.nokia.com/app-group
                       operator: In
                       values:
+                        - git-plane
+                        - git-replica-plane
                         - control-plane
                 topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
@@ -37,7 +39,16 @@ spec:
                   - key: eda.nokia.com/app-group
                     operator: In
                     values:
-                      - control-plane
+                      - git-plane
+      tolerations:
+        - key: node.kubernetes.io/unreachable
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300 # kpt-set: ${GOGS_TOLERATION_NODE_UNREACHABLE}
+        - key: node.kubernetes.io/not-ready
+          operator: Exists
+          effect: NoExecute
+          tolerationSeconds: 300 # kpt-set: ${GOGS_TOLERATION_NODE_NOT_READY}
       imagePullSecrets:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:

@@ -1,0 +1,10 @@
+apiVersion: artifacts.eda.nokia.com/v1
+kind: Artifact
+metadata:
+  name: llm-db-srlinux-ghcr-24.10.6
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  repo: llm-dbs
+  filePath: llm-embeddings-srl-24-10-6.tar.gz
+  remoteFileUrl:
+    fileUrl: https://github.com/nokia-eda/llm-embeddings/releases/download/nokia-srl-v24.10.6/llm-embeddings-srl-24-10-6-v1.tar.gz # kpt-set: ${LLM_DB_REMOTE_URL}/llm-embeddings-srl-24-10-6-v1.tar.gz

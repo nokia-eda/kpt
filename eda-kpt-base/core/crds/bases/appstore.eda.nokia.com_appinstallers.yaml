@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: appinstallers.appstore.eda.nokia.com
 spec:
   group: appstore.eda.nokia.com
@@ -19,6 +19,9 @@ spec:
       type: string
     - jsonPath: .status.result
       name: Result
+      type: string
+    - jsonPath: .spec.dryRun
+      name: DryRun
       type: string
     name: v1
     schema:
@@ -53,8 +56,9 @@ spec:
                       type: string
                     appSettings:
                       description: |-
-                        AppSettings defines a list of variables and their value. Only variables that are customised need to be mentioned.
+                        AppSettings defines a list of variables and their value. Only variables that are customized need to be mentioned.
                         If AppSettings are not again mentioned on upgrade, values will remain as is.
+                      type: object
                       x-kubernetes-preserve-unknown-fields: true
                     catalog:
                       description: |-
@@ -97,6 +101,12 @@ spec:
                 items:
                   type: string
                 type: array
+              dryRun:
+                default: false
+                description: |-
+                  DryRun indicates whether to run the installer without actually applying the manifest to the system.
+                  The results will be put in a transaction result.
+                type: boolean
               operation:
                 description: |-
                   Operation is the installing operation.

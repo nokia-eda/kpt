@@ -3,6 +3,8 @@ kind: NodeProfile
 metadata:
   name: srlinux-ghcr-24.10.5
   namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
 spec:
   nodeUser: admin
   operatingSystem: srl
@@ -11,6 +13,7 @@ spec:
   versionPath: .system.information.version
   versionMatch: v24\.10\.5.*
   yang: https://eda-asvr.eda-system.svc/eda-system/schemaprofiles/srlinux-ghcr-24.10.5/srlinux-24.10.5.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/schemaprofiles/srlinux-ghcr-24.10.5/srlinux-24.10.5.zip
+  llmDb: https://eda-asvr.eda-system.svc/eda-system/llm-dbs/llm-db-srlinux-ghcr-24.10.5/llm-embeddings-srl-24-10-5.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/llm-dbs/llm-db-srlinux-ghcr-24.10.5/llm-embeddings-srl-24-10-5.tar.gz
   dhcp:
     managementPoolv4: 'ipv4-mgmt-pool'
     dhcp4Options:

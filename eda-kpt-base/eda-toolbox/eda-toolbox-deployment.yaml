@@ -4,17 +4,19 @@ metadata:
   name: eda-toolbox
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
   labels:
-    eda.nokia.com/app-group: control-plane
+    eda.nokia.com/app-group: toolbox
     eda.nokia.com/app: eda-toolbox
 spec:
   selector:
     matchLabels:
       eda.nokia.com/app: eda-toolbox
+  strategy:
+    type: Recreate
   replicas: 1
   template:
     metadata:
       labels:
-        eda.nokia.com/app-group: control-plane
+        eda.nokia.com/app-group: toolbox
         eda.nokia.com/app: eda-toolbox
     spec:
       affinity:
@@ -27,7 +29,7 @@ spec:
                     - key: eda.nokia.com/app-group
                       operator: In
                       values:
-                        - control-plane
+                        - toolbox
                 topologyKey: "kubernetes.io/hostname"
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -37,14 +39,14 @@ spec:
                   - key: eda.nokia.com/app-group
                     operator: In
                     values:
-                      - control-plane
+                      - toolbox
       serviceAccountName: eda-toolbox
       terminationGracePeriodSeconds: 10
       imagePullSecrets:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-toolbox
-          image: ghcr.io/nokia-eda/core/eda-toolbox:25.8.3 # kpt-set: ${EDA_TOOLBOX_IMG}
+          image: ghcr.io/nokia-eda/core/eda-toolbox:25.12.1 # kpt-set: ${EDA_TOOLBOX_IMG}
           # In Openshift environment we uncomment the below lines
           # securityContext:
           #   privileged: true
@@ -64,10 +66,10 @@ spec:
               name: tls
             - mountPath: /var/run/eda/tls/internal/trust
               name: trustbundle
-            - mountPath: /var/run/eda/tls/node
-              name: node-trustbundle
             - mountPath: /var/run/eda/tls/api
               name: api-trustbundle
+            - mountPath: /var/run/eda/tls/node
+              name: node-trustbundle
       volumes:
         - csi:
             driver: csi.cert-manager.io
@@ -75,6 +77,8 @@ spec:
             volumeAttributes:
               csi.cert-manager.io/dns-names: eda-toolbox,eda-toolbox.${POD_NAMESPACE}.svc,eda-toolbox.${POD_NAMESPACE}.svc.cluster,eda-toolbox.${POD_NAMESPACE}.svc.cluster.local,eda # kpt-set: eda-toolbox,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc.cluster,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,eda
               csi.cert-manager.io/issuer-name: eda-internal-issuer
+              csi.cert-manager.io/duration: 720h # kpt-set: ${EDA_INTERNAL_CERT_DURATION}
+              csi.cert-manager.io/key-algorithm: ECDSA
           name: tls
         - configMap:
             defaultMode: 420

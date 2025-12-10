@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: toponodes.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -111,12 +111,13 @@ spec:
                 properties:
                   mode:
                     default: normal
-                    description: "The mode in which this TopoNode is functioning.\n\"normal\" (the default)\n   indicates that NPP is expecting an endpoint to exist, and will accept and confirm changes only if the endpoint\n   accepts them.\n\"maintenance\"\n   indicates that no changes will be accepted for the TopoNode, irrespective if the endpoint is up and reachable.\n   The exception is if an upgrade is occuring, in which case changes will be accepted.\n\"null\"\n\t  indicates that changes will be accepted from CRs and no NPP will be spun up. NPP validation will not occur.\n   This may be useful in playground mode to avoid spinning up of 1000s of NPPs.\n\"emulate\"\n   indicates that changes will be accepted at the NPP level, without pushing them to a endpoint. NPP validation\n   still occurs.  If no IP address is present, we also run in emulate mode."
+                    description: "The mode in which this TopoNode is functioning.\n\"normal\" (the default)\n   indicates that NPP is expecting an endpoint to exist, and will accept and confirm changes only if the endpoint\n   accepts them.\n\"maintenance\"\n   indicates that no changes will be accepted for the TopoNode, irrespective if the endpoint is up and reachable.\n   The exception is if an upgrade is occuring, in which case changes will be accepted.\n\"null\"\n\t  indicates that changes will be accepted from CRs and no NPP will be spun up. NPP validation will not occur.\n   This may be useful in playground mode to avoid spinning up of 1000s of NPPs.\n\"emulate\"\n   indicates that changes will be accepted at the NPP level, without pushing them to a endpoint. NPP validation\n   still occurs.  If no IP address is present, we also run in emulate mode.\n\"monitor\"\n   indicates that state will be collectd but config will not be pushed to a endpoint. NPP validation still occurs."
                     enum:
                     - normal
                     - maintenance
                     - "null"
                     - emulate
+                    - monitor
                     type: string
                 type: object
               onBoarded:

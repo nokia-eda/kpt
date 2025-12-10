@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   name: engineconfigs.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -38,6 +38,38 @@ spec:
           spec:
             description: EngineConfigSpec defines the desired state of EngineConfig
             properties:
+              aiEngine:
+                description: Settings related to AI Engine.
+                properties:
+                  image:
+                    description: The full URI to the image
+                    type: string
+                  image-credential:
+                    description: The credential to use when interacting with the image
+                    type: string
+                  replicas:
+                    description: The number of replicas to launch
+                    format: int32
+                    type: integer
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
+                type: object
               allocationPools:
                 description: Settings related to allocation pools
                 properties:
@@ -527,6 +559,10 @@ spec:
                         type: object
                     type: object
                 type: object
+              internalCertDuration:
+                default: 720h
+                description: Duration of the internal certs
+                type: string
               kubernetes:
                 description: Settings related to interactions with Kubernetes.
                 properties:

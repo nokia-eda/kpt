@@ -25,6 +25,9 @@ spec:
   privateKey:
     algorithm: ECDSA
     size: 256
+    rotationPolicy: Always
+  duration: 2160h
+  renewBefore: 1440h
   issuerRef:
     name: eda-root-ca-issuer
     kind: Issuer

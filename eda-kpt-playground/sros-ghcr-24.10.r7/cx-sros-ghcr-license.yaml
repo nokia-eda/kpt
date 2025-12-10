@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sros-ghcr-24.10.r7-dummy-license
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+data:
+  license.key: ""
