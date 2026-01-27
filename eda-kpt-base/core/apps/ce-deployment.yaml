@@ -59,7 +59,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-ce
-          image: ghcr.io/nokia-eda/core/config-engine:25.12.1 # kpt-set: ${CE_IMG}
+          image: ghcr.io/nokia-eda/core/config-engine:25.12.2 # kpt-set: ${CE_IMG}
           # resources:
           #   limits:
           #     cpu: "2" # kpt-set: ${CE_LIMIT_CPU}
