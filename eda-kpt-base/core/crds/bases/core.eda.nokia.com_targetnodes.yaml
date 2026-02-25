@@ -279,6 +279,7 @@ spec:
                           description: DHCPv6 option to return to the TopoNode.
                           enum:
                           - 59-BootfileUrl
+                          - 56-NTPServers
                           type: string
                         value:
                           description: Value to return to the TopoNode for the specified option.

@@ -6,7 +6,7 @@ metadata:
 data:
   init.sh: |
     #!/bin/bash
-    declare -a REPOS=("customresources" "intents" "keycloak" "credentials" "usersettings" "apps" "catalog" "identity")
+    declare -a REPOS=("customresources" "credentials" "usersettings" "apps" "catalog" "identity")
     # Number of seconds to wait for gogs to comeup
     MAX_RETRIES=30
     # MAX number of tries to create a repo
