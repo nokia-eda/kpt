@@ -26,6 +26,13 @@ data:
       @label @INPUT
     </source>
 
+    <source>
+      @type forward
+      port 24224
+      bind ::
+      @label @INPUT
+    </source>
+
     <label @INPUT>
       <filter **>
         @type record_transformer
