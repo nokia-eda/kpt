@@ -10,8 +10,8 @@ spec:
   port: 57400
   operatingSystem: sros
   version: 24.10.r7
-  yang: https://eda-asvr.eda-system.svc/eda-system/schemaprofiles/sros-ghcr-24.10.r7/sros-24.10.r7.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/schemaprofiles/sros-ghcr-24.10.r7/sros-24.10.r7.zip
-  llmDb: https://eda-asvr.eda-system.svc/eda-system/llm-dbs/llm-db-sros-ghcr-24.10.r7/llm-embeddings-sros-24-10-r7.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/llm-dbs/llm-db-sros-ghcr-24.10.r7/llm-embeddings-sros-24-10-r7.tar.gz
+  yang: https://eda-asvr.eda-system.svc/_base_/schemaprofiles/sros-ghcr-24.10.r7/sros-24.10.r7.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/_base_/schemaprofiles/sros-ghcr-24.10.r7/sros-24.10.r7.zip
+  llmDb: https://eda-asvr.eda-system.svc/_base_/llm-dbs/llm-db-sros-ghcr-24.10.r7/llm-embeddings-sros-24-10-r7.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/_base_/llm-dbs/llm-db-sros-ghcr-24.10.r7/llm-embeddings-sros-24-10-r7.tar.gz
   dhcp:
     managementPoolv4: 'ipv4-mgmt-pool'
     dhcp4Options:
@@ -20,6 +20,6 @@ spec:
       - 128.251.10.125
   license: sros-ghcr-24.10.r7-dummy-license
   images:
-  - image: eda-system/srosimages/sros-24.10.r7 # kpt-set: ${EDA_CORE_NAMESPACE}/srosimages/sros-24.10.r7
-    imageMd5: eda-system/srosimages/sros-24.10.r7-md5 # kpt-set: ${EDA_CORE_NAMESPACE}/srosimages/sros-24.10.r7-md5
+  - image: _base_/srlimages/sros-24.10.r7
+    imageMd5: _base_/srlimages/sros-24.10.r7-md5
   imagePullSecret: core # kpt-set: ${CORE_IMG_CREDENTIALS}

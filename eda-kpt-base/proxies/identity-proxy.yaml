@@ -5,4 +5,4 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   authType: atDestination
-  rootUrl: https://eda-keycloak:9443/core/httpproxy/v1/keycloak
+  rootUrl: https://eda-keycloak.eda-system.svc:9443/core/proxy/v1/identity # kpt-set: https://eda-keycloak.${EDA_CORE_NAMESPACE}.svc:9443/core/proxy/v1/identity

@@ -4,9 +4,9 @@ kind: ServiceAccount
 metadata:
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.10.1
+    helm.sh/chart: cert-manager-csi-driver-v0.12.0
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.10.1"
+    app.kubernetes.io/version: "v0.12.0"
     app.kubernetes.io/managed-by: Helm
   name: cert-manager-csi-driver
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
@@ -17,9 +17,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.10.1
+    helm.sh/chart: cert-manager-csi-driver-v0.12.0
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.10.1"
+    app.kubernetes.io/version: "v0.12.0"
     app.kubernetes.io/managed-by: Helm
   name: cert-manager-csi-driver
 rules:
@@ -33,9 +33,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.10.1
+    helm.sh/chart: cert-manager-csi-driver-v0.12.0
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.10.1"
+    app.kubernetes.io/version: "v0.12.0"
     app.kubernetes.io/managed-by: Helm
   name: cert-manager-csi-driver
 roleRef:
@@ -55,9 +55,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.10.1
+    helm.sh/chart: cert-manager-csi-driver-v0.12.0
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.10.1"
+    app.kubernetes.io/version: "v0.12.0"
     app.kubernetes.io/managed-by: Helm
 spec:
   selector:
@@ -68,19 +68,26 @@ spec:
       labels:
         app: cert-manager-csi-driver
         app.kubernetes.io/name: cert-manager-csi-driver
-        helm.sh/chart: cert-manager-csi-driver-v0.10.1
+        helm.sh/chart: cert-manager-csi-driver-v0.12.0
         app.kubernetes.io/instance: release-name
-        app.kubernetes.io/version: "v0.10.1"
+        app.kubernetes.io/version: "v0.12.0"
         app.kubernetes.io/managed-by: Helm
       annotations:
         kubectl.kubernetes.io/default-container: cert-manager-csi-driver
     spec:
+      securityContext:
+        seccompProfile: {type: RuntimeDefault}
       serviceAccountName: cert-manager-csi-driver
       imagePullSecrets:
       - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
       - name: node-driver-registrar
-        image: "ghcr.io/nokia-eda/ext/sig-storage/csi-node-driver-registrar:v2.12.0" # kpt-set: ${CSI_REGISTRAR_IMG}
+        securityContext:
+          runAsUser: 0
+          allowPrivilegeEscalation: false
+          capabilities: {drop: ["ALL"]}
+          readOnlyRootFilesystem: true
+        image: "ghcr.io/nokia-eda/ext/sig-storage/csi-node-driver-registrar:v2.15.0" # kpt-set: ${CSI_REGISTRAR_IMG}
         imagePullPolicy: IfNotPresent
         args:
         - -v=1
@@ -97,7 +104,12 @@ spec:
         - name: registration-dir
           mountPath: /registration
       - name: liveness-probe
-        image: "ghcr.io/nokia-eda/ext/sig-storage/livenessprobe:v2.12.0" # kpt-set: ${CSI_LIVPROBE_IMG}
+        securityContext:
+          runAsUser: 0
+          allowPrivilegeEscalation: false
+          capabilities: {drop: ["ALL"]}
+          readOnlyRootFilesystem: true
+        image: "ghcr.io/nokia-eda/ext/sig-storage/livenessprobe:v2.17.0" # kpt-set: ${CSI_LIVPROBE_IMG}
         imagePullPolicy: IfNotPresent
         args:
         - --csi-address=/plugin/csi.sock
@@ -109,13 +121,11 @@ spec:
           mountPath: /plugin
       - name: cert-manager-csi-driver
         securityContext:
-          readOnlyRootFilesystem: true
-          privileged: true
-          capabilities:
-            add: ["SYS_ADMIN"]
-          allowPrivilegeEscalation: true
           runAsUser: 0
-        image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-csi-driver:v0.10.1" # kpt-set: ${CSI_DRIVER_IMG}
+          privileged: true
+          capabilities: {drop: ["ALL"]}
+          readOnlyRootFilesystem: true
+        image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-csi-driver:v0.12.0" # kpt-set: ${CSI_DRIVER_IMG}
         imagePullPolicy: IfNotPresent
         args:
         - --log-level=1
@@ -179,9 +189,9 @@ metadata:
   name: csi.cert-manager.io
   labels:
     app.kubernetes.io/name: cert-manager-csi-driver
-    helm.sh/chart: cert-manager-csi-driver-v0.10.1
+    helm.sh/chart: cert-manager-csi-driver-v0.12.0
     app.kubernetes.io/instance: release-name
-    app.kubernetes.io/version: "v0.10.1"
+    app.kubernetes.io/version: "v0.12.0"
     app.kubernetes.io/managed-by: Helm
 spec:
   podInfoOnMount: true

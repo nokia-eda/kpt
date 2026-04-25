@@ -46,7 +46,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-toolbox
-          image: ghcr.io/nokia-eda/core/eda-toolbox:25.12.4 # kpt-set: ${EDA_TOOLBOX_IMG}
+          image: ghcr.io/nokia-eda/core/eda-toolbox:26.4.1 # kpt-set: ${EDA_TOOLBOX_IMG}
           # In Openshift environment we uncomment the below lines
           # securityContext:
           #   privileged: true
@@ -75,9 +75,10 @@ spec:
             driver: csi.cert-manager.io
             readOnly: true
             volumeAttributes:
-              csi.cert-manager.io/dns-names: eda-toolbox,eda-toolbox.${POD_NAMESPACE}.svc,eda-toolbox.${POD_NAMESPACE}.svc.cluster,eda-toolbox.${POD_NAMESPACE}.svc.cluster.local,eda # kpt-set: eda-toolbox,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc.cluster,eda-toolbox.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,eda
+              csi.cert-manager.io/dns-names: eda-toolbox,eda-toolbox.${POD_NAMESPACE}.svc,eda-toolbox.${POD_NAMESPACE}.svc.cluster,eda-toolbox.${POD_NAMESPACE}.svc.cluster.local,internal.eda.nokia.com
               csi.cert-manager.io/issuer-name: eda-internal-issuer
               csi.cert-manager.io/duration: 720h # kpt-set: ${EDA_INTERNAL_CERT_DURATION}
+              csi.cert-manager.io/renew-before: 240h # kpt-set: ${EDA_INTERNAL_CERT_RENEW_BEFORE}
               csi.cert-manager.io/key-algorithm: ECDSA
           name: tls
         - configMap:

@@ -1,8 +1,8 @@
 apiVersion: core.eda.nokia.com/v1
 kind: HttpProxy
 metadata:
-  name: asvr
+  name: docs
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
+  rootUrl: https://eda-appstore.{EDA_CORE_NAMESPACE}.svc:8082/
   authType: atDestination
-  rootUrl: https://eda-asvr.eda-system.svc/ # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/

@@ -5,7 +5,7 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   bufferSize: 65535
-  destHost: eda-dhcpv6
+  destHost: eda-dhcpv6.eda-system.svc # kpt-set: eda-dhcpv6.${EDA_CORE_NAMESPACE}.svc
   destPort: 547
   proxyPort: 547 # kpt-set: ${INT_DHCPV6_PORT}
   idleTimeout: 60
@@ -17,7 +17,7 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
   bufferSize: 65535
-  destHost: eda-dhcp
+  destHost: eda-dhcp.eda-system.svc # kpt-set: eda-dhcp.${EDA_CORE_NAMESPACE}.svc
   destPort: 67
   proxyPort: 67 # kpt-set: ${INT_DHCPV4_PORT}
   idleTimeout: 60

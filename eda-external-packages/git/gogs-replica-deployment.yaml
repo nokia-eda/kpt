@@ -53,7 +53,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: gogs
-          image: ghcr.io/nokia-eda/core/gogs:0.13.0 # kpt-set: ${GOGS_IMG_TAG}
+          image: ghcr.io/nokia-eda/ext/gogs/gogs:0.14.1 # kpt-set: ${GOGS_IMG_TAG}
           #image: gogs/gogs:latest
           securityContext:
             privileged: true

@@ -1,0 +1,79 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-integration-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  isCA: true
+  commonName: eda-integration-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-integration-ca
+  secretTemplate:
+    labels:
+      eda.nokia.com/ca: "integration"
+  usages:
+    - digital signature
+    - cert sign
+    - key encipherment
+    - server auth
+    - client auth
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  duration: 2160h
+  renewBefore: 1440h
+  issuerRef:
+    name: eda-root-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-integration-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  ca:
+    secretName: eda-integration-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-integration-intermediate-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  isCA: true
+  commonName: eda-integration-intermediate-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-integration-intermediate-ca
+  usages:
+    - cert sign
+    - crl sign
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  duration: 1h
+  renewBefore: 20m
+  issuerRef:
+    name: eda-integration-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-integration-intermediate-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  ca:
+    secretName: eda-integration-intermediate-ca

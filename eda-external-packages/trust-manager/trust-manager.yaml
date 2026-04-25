@@ -1,14 +1,15 @@
 # Source: trust-manager/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
+automountServiceAccountToken: true
 metadata:
   name: trust-manager
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 ---
 # Source: trust-manager/templates/crd-trust.cert-manager.io_bundles.yaml
@@ -20,9 +21,9 @@ metadata:
     helm.sh/resource-policy: keep
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 spec:
   group: trust.cert-manager.io
@@ -252,6 +253,8 @@ spec:
                             JKS requests a JKS-formatted binary trust bundle to be written to the target.
                             The bundle has "changeit" as the default password.
                             For more information refer to this link https://cert-manager.io/docs/faq/#keystore-passwords
+                            Format is deprecated: Writing JKS is subject for removal. Please migrate to PKCS12.
+                            PKCS#12 trust stores created by trust-manager are compatible with Java.
                           properties:
                             key:
                               description: Key is the key of the entry in the object's `data` field to be used.
@@ -270,7 +273,9 @@ spec:
                         pkcs12:
                           description: |-
                             PKCS12 requests a PKCS12-formatted binary trust bundle to be written to the target.
+
                             The bundle is by default created without a password.
+                            For more information refer to this link https://cert-manager.io/docs/faq/#keystore-passwords
                           properties:
                             key:
                               description: Key is the key of the entry in the object's `data` field to be used.
@@ -280,6 +285,22 @@ spec:
                               default: ""
                               description: Password for PKCS12 trust store
                               maxLength: 128
+                              type: string
+                            profile:
+                              description: |-
+                                Profile specifies the certificate encryption algorithms and the HMAC algorithm
+                                used to create the PKCS12 trust store.
+
+                                If provided, allowed values are:
+                                `LegacyRC2`: Deprecated. Not supported by default in OpenSSL 3 or Java 20.
+                                `LegacyDES`: Less secure algorithm. Use this option for maximal compatibility.
+                                `Modern2023`: Secure algorithm. Use this option in case you have to always use secure algorithms (e.g. because of company policy).
+
+                                Default value is `LegacyRC2` for backward compatibility.
+                              enum:
+                                - LegacyRC2
+                                - LegacyDES
+                                - Modern2023
                               type: string
                           required:
                             - key
@@ -295,6 +316,20 @@ spec:
                           description: Key is the key of the entry in the object's `data` field to be used.
                           minLength: 1
                           type: string
+                        metadata:
+                          description: Metadata is an optional set of labels and annotations to be copied to the target.
+                          properties:
+                            annotations:
+                              additionalProperties:
+                                type: string
+                              description: Annotations is a key value map to be copied to the target.
+                              type: object
+                            labels:
+                              additionalProperties:
+                                type: string
+                              description: Labels is a key value map to be copied to the target.
+                              type: object
+                          type: object
                       required:
                         - key
                       type: object
@@ -354,13 +389,26 @@ spec:
                           description: Key is the key of the entry in the object's `data` field to be used.
                           minLength: 1
                           type: string
+                        metadata:
+                          description: Metadata is an optional set of labels and annotations to be copied to the target.
+                          properties:
+                            annotations:
+                              additionalProperties:
+                                type: string
+                              description: Annotations is a key value map to be copied to the target.
+                              type: object
+                            labels:
+                              additionalProperties:
+                                type: string
+                              description: Labels is a key value map to be copied to the target.
+                              type: object
+                          type: object
                       required:
                         - key
                       type: object
                   type: object
               required:
                 - sources
-                - target
               type: object
             status:
               description: Status of the Bundle. This is set and managed automatically.
@@ -370,34 +418,33 @@ spec:
                     List of status conditions to indicate the status of the Bundle.
                     Known condition types are `Bundle`.
                   items:
-                    description: BundleCondition contains condition information for a Bundle.
+                    description: Condition contains details for one aspect of the current state of this API Resource.
                     properties:
                       lastTransitionTime:
                         description: |-
-                          LastTransitionTime is the timestamp corresponding to the last status
-                          change of this condition.
+                          lastTransitionTime is the last time the condition transitioned from one status to another.
+                          This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                         format: date-time
                         type: string
                       message:
                         description: |-
-                          Message is a human-readable description of the details of the last
-                          transition, complementing reason.
+                          message is a human readable message indicating details about the transition.
+                          This may be an empty string.
                         maxLength: 32768
                         type: string
                       observedGeneration:
                         description: |-
-                          If set, this represents the .metadata.generation that the condition was
-                          set based upon.
-                          For instance, if .metadata.generation is currently 12, but the
-                          .status.condition[x].observedGeneration is 9, the condition is out of date
-                          with respect to the current state of the Bundle.
+                          observedGeneration represents the .metadata.generation that the condition was set based upon.
+                          For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                          with respect to the current state of the instance.
                         format: int64
                         minimum: 0
                         type: integer
                       reason:
                         description: |-
-                          Reason is a brief machine-readable explanation for the condition's last
-                          transition.
+                          reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                          Producers of specific condition types may define expected values and meanings for this field,
+                          and whether the values are considered a guaranteed API.
                           The value should be a CamelCase string.
                           This field may not be empty.
                         maxLength: 1024
@@ -405,19 +452,20 @@ spec:
                         pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
                         type: string
                       status:
-                        description: Status of the condition, one of True, False, Unknown.
+                        description: status of the condition, one of True, False, Unknown.
                         enum:
                           - "True"
                           - "False"
                           - Unknown
                         type: string
                       type:
-                        description: Type of the condition, known values are (`Synced`).
+                        description: type of condition in CamelCase or in foo.example.com/CamelCase.
                         maxLength: 316
                         pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                         type: string
                     required:
                       - lastTransitionTime
+                      - message
                       - reason
                       - status
                       - type
@@ -448,9 +496,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
   name: trust-manager
 rules:
@@ -458,8 +506,7 @@ rules:
   - "trust.cert-manager.io"
   resources:
   - "bundles"
-  # We also need patch here so we can perform migrations from old CSA to SSA.
-  verbs: ["get", "list", "watch", "patch"]
+  verbs: ["get", "list", "watch"]
 # Permissions to update finalizers are required for trust-manager to work correctly
 # on OpenShift, even though we don't directly use finalizers at the time of writing
 - apiGroups:
@@ -475,13 +522,13 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - "configmaps"
-  verbs: ["get", "list", "create", "patch", "watch", "delete"]
+  - "namespaces"
+  verbs: ["get", "list", "watch"]
 - apiGroups:
   - ""
   resources:
-  - "namespaces"
-  verbs: ["get", "list", "watch"]
+  - "configmaps"
+  verbs: ["get", "list", "create", "patch", "watch", "delete"]
 - apiGroups:
   - ""
   resources:
@@ -494,9 +541,9 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
   name: trust-manager
 roleRef:
@@ -516,9 +563,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -538,9 +585,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 rules:
 - apiGroups:
@@ -562,9 +609,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -583,9 +630,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -605,9 +652,9 @@ metadata:
   labels:
     app: trust-manager
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -628,9 +675,9 @@ metadata:
   labels:
     app: trust-manager
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 spec:
   type: ClusterIP
@@ -650,12 +697,13 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       app: trust-manager
@@ -664,17 +712,18 @@ spec:
       labels:
         app: trust-manager
         app.kubernetes.io/name: trust-manager
-        helm.sh/chart: trust-manager-v0.15.0
+        helm.sh/chart: trust-manager-v0.20.3
         app.kubernetes.io/instance: trust-manager
-        app.kubernetes.io/version: "v0.15.0"
+        app.kubernetes.io/version: "v0.20.3"
         app.kubernetes.io/managed-by: Helm
     spec:
       serviceAccountName: trust-manager
+      automountServiceAccountToken: true
       imagePullSecrets:
       - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       initContainers:
       - name: cert-manager-package-debian
-        image: "ghcr.io/nokia-eda/ext/jetstack/cert-manager-package-debian:20210119.0" # kpt-set: ${TRUSTMGRBUNDLE_IMG}
+        image: "ghcr.io/nokia-eda/ext/jetstack/trust-pkg-debian-bookworm:20230311-deb12u1.2" # kpt-set: ${TRUSTMGRBUNDLE_IMG}
         imagePullPolicy: IfNotPresent
         args:
         - "/copyandmaybepause"
@@ -695,7 +744,7 @@ spec:
             type: RuntimeDefault
       containers:
       - name: trust-manager
-        image: "ghcr.io/nokia-eda/ext/jetstack/trust-manager:v0.15.0" # kpt-set: ${TRUSTMGR_IMG}
+        image: "ghcr.io/nokia-eda/ext/jetstack/trust-manager:v0.20.3" # kpt-set: ${TRUSTMGR_IMG}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 6443
@@ -717,6 +766,7 @@ spec:
         - "--metrics-port=9402"
         - "--readiness-probe-port=6060"
         - "--readiness-probe-path=/readyz"
+        - "--leader-elect=true"
         - "--leader-election-lease-duration=15s"
         - "--leader-election-renew-deadline=10s"
         # trust
@@ -762,9 +812,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 spec:
   commonName: "trust-manager.eda-system.svc" # kpt-set: trust-manager.${EDA_TRUSTMGR_NAMESPACE}.svc
@@ -785,9 +835,9 @@ metadata:
   namespace: eda-system # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}
   labels:
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
 spec:
   selfSigned: {}
@@ -800,9 +850,9 @@ metadata:
   labels:
     app: trust-manager
     app.kubernetes.io/name: trust-manager
-    helm.sh/chart: trust-manager-v0.15.0
+    helm.sh/chart: trust-manager-v0.20.3
     app.kubernetes.io/instance: trust-manager
-    app.kubernetes.io/version: "v0.15.0"
+    app.kubernetes.io/version: "v0.20.3"
     app.kubernetes.io/managed-by: Helm
   annotations:
     cert-manager.io/inject-ca-from: "eda-system/trust-manager" # kpt-set: ${EDA_TRUSTMGR_NAMESPACE}/trust-manager
@@ -812,12 +862,12 @@ webhooks:
       - apiGroups:
           - "trust.cert-manager.io"
         apiVersions:
-          - "*"
+          - v1alpha1
         operations:
           - CREATE
           - UPDATE
         resources:
-          - "*/*"
+          - bundles
     admissionReviewVersions: ["v1"]
     timeoutSeconds: 5
     failurePolicy: Fail

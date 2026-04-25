@@ -15,6 +15,9 @@ metadata:
     nginx.ingress.kubernetes.io/server-snippet: |
       client_header_buffer_size 128k;
       large_client_header_buffers 4 128k;
+    # Uncomment to force TLS 1.3 between the ingress client and the backend eda-api service
+    # nginx.ingress.kubernetes.io/configuration-snippet: |
+    #   proxy_ssl_protocols TLSv1.3;
 spec:
   rules:
   - http:

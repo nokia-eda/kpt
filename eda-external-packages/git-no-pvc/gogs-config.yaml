@@ -11,7 +11,6 @@ data:
     [log]
     LEVEL     = info
     [repository]
-    AUTO_INIT = true
     FORCE_PRIVATE = true
     [server]
     OFFLINE_MODE = true
@@ -24,6 +23,13 @@ data:
     DISABLE_REGISTRATION = true
     [server]
     EXTERNAL_URL = http://eda-git:3000/core/httpproxy/v1/gogs/
+    SSH_SERVER_ALGORITHMS = ecdsa, ed25519
+    MINIMUM_KEY_SIZE_CHECK = true
+    [ssh.minimum_key_sizes]
+    ED25519 = 256
+    ECDSA   = 384
+    RSA     = -1
+    DSA     = -1
   readme: |-
     # {Name}
 

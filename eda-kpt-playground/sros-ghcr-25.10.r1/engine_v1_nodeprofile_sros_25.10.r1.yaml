@@ -10,7 +10,7 @@ spec:
   port: 57400
   operatingSystem: sros
   version: 25.10.r1
-  yang: https://eda-asvr.eda-system.svc/eda-system/schemaprofiles/sros-ghcr-25.10.r1/sros-25.10.r1.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/${EDA_CORE_NAMESPACE}/schemaprofiles/sros-ghcr-25.10.r1/sros-25.10.r1.zip
+  yang: https://eda-asvr.eda-system.svc/_base_/schemaprofiles/sros-ghcr-25.10.r1/sros-25.10.r1.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/_base_/schemaprofiles/sros-ghcr-25.10.r1/sros-25.10.r1.zip
   dhcp:
     managementPoolv4: 'ipv4-mgmt-pool'
     dhcp4Options:
@@ -19,6 +19,6 @@ spec:
       - 128.251.10.125
   license: sros-ghcr-25.10.r1-dummy-license
   images:
-  - image: eda-system/srosimages/sros-25.10.r1 # kpt-set: ${EDA_CORE_NAMESPACE}/srosimages/sros-25.10.r1
-    imageMd5: eda-system/srosimages/sros-25.10.r1-md5 # kpt-set: ${EDA_CORE_NAMESPACE}/srosimages/sros-25.10.r1-md5
+  - image: _base_/srlimages/sros-25.10.r1
+    imageMd5: _base_/srlimages/sros-25.10.1-md5
   imagePullSecret: core # kpt-set: ${CORE_IMG_CREDENTIALS}
