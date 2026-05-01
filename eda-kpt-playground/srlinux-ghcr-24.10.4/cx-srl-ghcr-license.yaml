@@ -3,5 +3,7 @@ kind: ConfigMap
 metadata:
   name: cx-srl-24-10-4-ghcr-license
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/backup: "true"
 data:
   license.key: ""
