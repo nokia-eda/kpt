@@ -1230,6 +1230,34 @@ spec:
                             type: object
                         type: object
                     type: object
+                  vcluster-coredns:
+                    description: Settings related to vCluster CoreDNS instance.
+                    properties:
+                      image:
+                        description: The full URI to the image
+                        type: string
+                      image-credential:
+                        description: The credential to use when interacting with the image
+                        type: string
+                      resources:
+                        description: Resource limits and requests for deployments
+                        properties:
+                          limits:
+                            properties:
+                              cpu:
+                                type: string
+                              memory:
+                                type: string
+                            type: object
+                          requests:
+                            properties:
+                              cpu:
+                                type: string
+                              memory:
+                                type: string
+                            type: object
+                        type: object
+                    type: object
                   vcluster-etcd:
                     description: Settings related to vCluster etcd instance.
                     properties:
