@@ -40,7 +40,7 @@ spec:
   identity-git-repo:
     remote-path: /eda/identity.git # kpt-set: ${GIT_REPO_IDENTITY}
   aiEngine:
-    image: ghcr.io/nokia-eda/core/ai-engine:26.4.2 # kpt-set: ${EAE_IMG}
+    image: ghcr.io/nokia-eda/core/ai-engine:26.4.3 # kpt-set: ${EAE_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -50,7 +50,7 @@ spec:
         cpu: "" # kpt-set: ${EAE_REQ_CPU}
         memory: "" # kpt-set: ${EAE_REQ_MEM}
   artifactServer:
-    image: ghcr.io/nokia-eda/core/artifact-server:26.4.2 # kpt-set: ${ASVR_IMG}
+    image: ghcr.io/nokia-eda/core/artifact-server:26.4.3 # kpt-set: ${ASVR_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -60,7 +60,7 @@ spec:
         cpu: "" # kpt-set: ${ASVR_REQ_CPU}
         memory: "" # kpt-set: ${ASVR_REQ_MEM}
   bootstrapServer:
-    image: ghcr.io/nokia-eda/core/bootstrap-server:26.4.2 # kpt-set: ${BSVR_IMG}
+    image: ghcr.io/nokia-eda/core/bootstrap-server:26.4.3 # kpt-set: ${BSVR_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -70,7 +70,7 @@ spec:
         cpu: "" # kpt-set: ${BSVR_REQ_CPU}
         memory: "" # kpt-set: ${BSVR_REQ_MEM}
   certChecker:
-    image: ghcr.io/nokia-eda/core/cert-checker:26.4.2 # kpt-set: ${ECC_IMG}
+    image: ghcr.io/nokia-eda/core/cert-checker:26.4.3 # kpt-set: ${ECC_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -80,7 +80,7 @@ spec:
         cpu: "" # kpt-set: ${ECC_REQ_CPU}
         memory: "" # kpt-set: ${ECC_REQ_MEM}
   cx:
-    image: ghcr.io/nokia-eda/core/cx:26.4.2 # kpt-set: ${CX_IMG}
+    image: ghcr.io/nokia-eda/core/cx:26.4.3 # kpt-set: ${CX_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -90,7 +90,7 @@ spec:
         cpu: "" # kpt-set: ${CX_REQ_CPU}
         memory: "" # kpt-set: ${CX_REQ_MEM}
   cxdp:
-    image: ghcr.io/nokia-eda/core/cxdp:26.4.2 # kpt-set: ${CXDP_IMG}
+    image: ghcr.io/nokia-eda/core/cxdp:26.4.3 # kpt-set: ${CXDP_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -104,7 +104,7 @@ spec:
     address: eda-cx-standalone #kpt-set: ${CXCLUSTER_ADDR}
     port: 52200 #kpt-set: ${CXCLUSTER_PORT}
   clusterManager:
-    image: ghcr.io/nokia-eda/core/cluster-manager:26.4.2 # kpt-set: ${ECM_IMG}
+    image: ghcr.io/nokia-eda/core/cluster-manager:26.4.3 # kpt-set: ${ECM_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -127,7 +127,7 @@ spec:
       image: ghcr.io/nokia-eda/ext/coredns/coredns:v1.12.1 # kpt-set: ${VCLUSTER_COREDNS_IMG}
       image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     vcluster-plugin:
-      image: ghcr.io/nokia-eda/core/eda-vcluster-plugin:26.4.2 # kpt-set: ${VCLUSTER_PLUGIN_IMG}
+      image: ghcr.io/nokia-eda/core/eda-vcluster-plugin:26.4.3 # kpt-set: ${VCLUSTER_PLUGIN_IMG}
       image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     vcluster-trustmanager:
       image: ghcr.io/nokia-eda/ext/jetstack/trust-manager:v0.20.3 # kpt-set: ${VCLUSTER_TRUST_MANAGER_IMG}
@@ -143,7 +143,7 @@ spec:
       accessMode: ReadWriteOnce # kpt-set: ${VCLUSTER_ETCD_STORAGE_ACCESS_MODE}
       storageClass: "" # kpt-set: ${VCLUSTER_ETCD_STORAGE_STORAGE_CLASS}
   metricsServer:
-    image: ghcr.io/nokia-eda/core/metrics-server:26.4.2 # kpt-set: ${EMS_IMG}
+    image: ghcr.io/nokia-eda/core/metrics-server:26.4.3 # kpt-set: ${EMS_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -153,7 +153,7 @@ spec:
         cpu: "" # kpt-set: ${EMS_REQ_CPU}
         memory: "" # kpt-set: ${EMS_REQ_MEM}
   npp:
-    image: ghcr.io/nokia-eda/core/npp:26.4.2 # kpt-set: ${NPP_IMG}
+    image: ghcr.io/nokia-eda/core/npp:26.4.3 # kpt-set: ${NPP_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -163,7 +163,7 @@ spec:
         cpu: "" # kpt-set: ${NPP_REQ_CPU}
         memory: "" # kpt-set: ${NPP_REQ_MEM}
   stateEngine:
-    image: ghcr.io/nokia-eda/core/state-engine:26.4.2 # kpt-set: ${SE_IMG}
+    image: ghcr.io/nokia-eda/core/state-engine:26.4.3 # kpt-set: ${SE_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${SE_REPLICAS}
     resources:
@@ -174,7 +174,7 @@ spec:
         cpu: "" # kpt-set: ${SE_REQ_CPU}
         memory: "" # kpt-set: ${SE_REQ_MEM}
   stateAggregator:
-    image: ghcr.io/nokia-eda/core/state-aggregator:26.4.2 # kpt-set: ${SA_IMG}
+    image: ghcr.io/nokia-eda/core/state-aggregator:26.4.3 # kpt-set: ${SA_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${SA_REPLICAS}
     resources:
@@ -185,7 +185,7 @@ spec:
         cpu: "" # kpt-set: ${SA_REQ_CPU}
         memory: "" # kpt-set: ${SA_REQ_MEM}
   stateController:
-    image: ghcr.io/nokia-eda/core/state-controller:26.4.2 # kpt-set: ${SC_IMG}
+    image: ghcr.io/nokia-eda/core/state-controller:26.4.3 # kpt-set: ${SC_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -195,7 +195,7 @@ spec:
         cpu: "" # kpt-set: ${SC_REQ_CPU}
         memory: "" # kpt-set: ${SC_REQ_MEM}
   flowEngine:
-    image: ghcr.io/nokia-eda/core/flow-engine:26.4.2 # kpt-set: ${FE_IMG}
+    image: ghcr.io/nokia-eda/core/flow-engine:26.4.3 # kpt-set: ${FE_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -205,7 +205,7 @@ spec:
         cpu: "" # kpt-set: ${FE_REQ_CPU}
         memory: "" # kpt-set: ${FE_REQ_MEM}
   api:
-    image: ghcr.io/nokia-eda/core/api-server:26.4.2 # kpt-set: ${API_IMG}
+    image: ghcr.io/nokia-eda/core/api-server:26.4.3 # kpt-set: ${API_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     replicas: 1 # kpt-set: ${API_REPLICAS}
     enableLoadBalancerNodePorts: false # kpt-set: ${API_SVC_ENABLE_LB_NODE_PORTS}
@@ -219,7 +219,7 @@ spec:
         cpu: "" # kpt-set: ${API_REQ_CPU}
         memory: "" # kpt-set: ${API_REQ_MEM}
   appStore:
-    image: ghcr.io/nokia-eda/core/appstore-server:26.4.2 # kpt-set: ${ASC_IMG}
+    image: ghcr.io/nokia-eda/core/appstore-server:26.4.3 # kpt-set: ${ASC_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -229,7 +229,7 @@ spec:
         cpu: "" # kpt-set: ${ASC_REQ_CPU}
         memory: "" # kpt-set: ${ASC_REQ_MEM}
   appStoreDocs:
-    image: ghcr.io/nokia-eda/core/appstore-docs-engine:26.4.2 # kpt-set: ${ASD_IMG}
+    image: ghcr.io/nokia-eda/core/appstore-docs-engine:26.4.3 # kpt-set: ${ASD_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -239,10 +239,10 @@ spec:
         cpu: "" # kpt-set: ${ASD_REQ_CPU}
         memory: "" # kpt-set: ${ASD_REQ_MEM}
   appStoreFlow:
-    image: ghcr.io/nokia-eda/core/appstore-flow:26.4.2 # kpt-set: ${ASF_IMG}
+    image: ghcr.io/nokia-eda/core/appstore-flow:26.4.3 # kpt-set: ${ASF_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
   testMan:
-    image: ghcr.io/nokia-eda/core/testman:26.4.2 # kpt-set: ${TM_IMG}
+    image: ghcr.io/nokia-eda/core/testman:26.4.3 # kpt-set: ${TM_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -252,7 +252,7 @@ spec:
         cpu: "" # kpt-set: ${TM_REQ_CPU}
         memory: "" # kpt-set: ${TM_REQ_MEM}
   identity:
-    image: ghcr.io/nokia-eda/core/eda-keycloak:26.4.2 # kpt-set: ${KC_IMG}
+    image: ghcr.io/nokia-eda/core/eda-keycloak:26.4.3 # kpt-set: ${KC_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -262,7 +262,7 @@ spec:
         cpu: "" # kpt-set: ${KC_REQ_CPU}
         memory: "" # kpt-set: ${KC_REQ_MEM}
   identitydb:
-    image: ghcr.io/nokia-eda/core/eda-postgres:26.4.2 # kpt-set: ${PG_IMG}
+    image: ghcr.io/nokia-eda/core/eda-postgres:26.4.3 # kpt-set: ${PG_IMG}
     image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
     resources:
       limits:
@@ -274,7 +274,7 @@ spec:
   logging:
     enable: true # kpt-set: ${EFB_ENABLED}
     logcollector:
-      image: ghcr.io/nokia-eda/core/eda-fluent-collector:26.4.2 # kpt-set: ${EFC_IMG}
+      image: ghcr.io/nokia-eda/core/eda-fluent-collector:26.4.3 # kpt-set: ${EFC_IMG}
       image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       resources:
         limits:
@@ -285,7 +285,7 @@ spec:
           memory: "" # kpt-set: ${EFB_LC_REQ_MEM}
     logoutput:
       branchLogsEnable: true # kpt-set: ${EFB_BRANCH_LOGS_ENABLED}
-      image: ghcr.io/nokia-eda/core/eda-fluent:26.4.2 # kpt-set: ${EFB_IMG}
+      image: ghcr.io/nokia-eda/core/eda-fluent:26.4.3 # kpt-set: ${EFB_IMG}
       image-credential: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       resources:
         limits:

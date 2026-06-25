@@ -33,8 +33,15 @@ data:
     until [[ -f "${USERNAME_FILE}" ]] do log "Waiting for "${USERNAME_FILE}" to exist" && sleep 2s; done
     until [[ -f "${PASSWORD_FILE}" ]] do log "Waiting for "${PASSWORD_FILE}" to exist" && sleep 2s; done
 
-    ADMIN_USER="$(cat "${USERNAME_FILE}" | base64 -d)"
-    ADMIN_PASS="$(cat "${PASSWORD_FILE}" | base64 -d)"
+    ADMIN_USER="$(base64 -d < "${USERNAME_FILE}" | tr -d '\n\r')"
+    ADMIN_PASS="$(base64 -d < "${PASSWORD_FILE}" | tr -d '\n\r')"
+    [[ -n "${ADMIN_USER}" ]] || die "decoded admin username is empty"
+    [[ -n "${ADMIN_PASS}" ]] || die "decoded admin password is empty"
+
+    # Build Basic auth without curl --user user:pass (password may contain ':' and other specials).
+    basic_auth_header() {
+      printf '%s:%s' "${ADMIN_USER}" "${ADMIN_PASS}" | base64 | tr -d '\n\r'
+    }
 
     check_gogs() {
       curl -s localhost:3000 > /dev/null
@@ -56,10 +63,10 @@ data:
             log "Creating repository: ${repo}"
             curl \
                 --fail-with-body \
-                -X POST localhost:3000/api/v1/admin/users/${ADMIN_USER}/repos \
+                -X POST "localhost:3000/api/v1/admin/users/${ADMIN_USER}/repos" \
                 -H "Content-Type: application/json" \
-                -d "{\"name\":\"${repo}\",\"description\":\"Repository storing saved ${repo}\",\"auto_init\":true,\"private\":true}" \
-                --user "${ADMIN_USER}:${ADMIN_PASS}"
+                -H "Authorization: Basic $(basic_auth_header)" \
+                -d "{\"name\":\"${repo}\",\"description\":\"Repository storing saved ${repo}\",\"auto_init\":true,\"private\":true}"
             exit_code=$?
             echo ""
             if [[ $exit_code -ne 0 ]]; then
@@ -90,7 +97,12 @@ data:
 
     if [[ ! -f "${INIT_MARKER}" ]] then
       log "Init marker at ${INIT_MARKER} not found, creating admin user"
-      su - git -c "/app/gogs/gogs admin create-user --name ${ADMIN_USER} --password ${ADMIN_PASS} --admin --email ${ADMIN_USER}@git.eda.dev"
+      create_user_cmd=$(printf '%q ' /app/gogs/gogs admin create-user \
+        --name "${ADMIN_USER}" \
+        --password "${ADMIN_PASS}" \
+        --admin \
+        --email "${ADMIN_USER}@git.eda.dev")
+      su - git -s /bin/bash -c "${create_user_cmd}"
       touch "${INIT_MARKER}"
     else
       log "Existing init marker at ${INIT_MARKER} found, skipping creation of admin user"
