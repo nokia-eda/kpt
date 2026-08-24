@@ -59,7 +59,7 @@ spec:
         - name: core # kpt-set: ${CORE_IMG_CREDENTIALS}
       containers:
         - name: eda-ce
-          image: ghcr.io/nokia-eda/core/config-engine:26.4.3 # kpt-set: ${CE_IMG}
+          image: ghcr.io/nokia-eda/core/config-engine:26.8.1 # kpt-set: ${CE_IMG}
           # resources:
           #   limits:
           #     cpu: "2" # kpt-set: ${CE_LIMIT_CPU}
@@ -78,6 +78,8 @@ spec:
               value: "" # kpt-set: ${HTTPS_PROXY}
             - name: NO_PROXY
               value: "" # kpt-set: ${NO_PROXY}
+            - name: CLUSTER_DNS_SUFFIX
+              value: "cluster.local" # kpt-set: ${CLUSTER_DNS_SUFFIX}
             - name: http_proxy
               value: "" # kpt-set: ${http_proxy}
             - name: https_proxy
@@ -85,7 +87,7 @@ spec:
             - name: no_proxy
               value: "" # kpt-set: ${no_proxy}
             - name: POD_NAMESPACE_IN_CSI
-              value: "" # kpt-set: ${POD_NAMESPACE_IN_CSI}
+              value: "" # kpt-set: ${POD_NAMESPACE_IN_CSI_ENV}
           volumeMounts:
             - mountPath: /var/run/eda/tls/internal/client
               name: tls
@@ -95,12 +97,14 @@ spec:
               name: georedundant-tls
             - mountPath: /var/run/eda/tls/georedundant/trust
               name: georedundant-trustbundle
+            - mountPath: /var/run/eda/tls/external/trust
+              name: external-trust-bundle
       volumes:
         - csi:
             driver: csi.cert-manager.io
             readOnly: true
             volumeAttributes:
-              csi.cert-manager.io/dns-names: eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster.local,internal.eda.nokia.com
+              csi.cert-manager.io/dns-names: eda-ce.eda-system.svc,eda-ce.eda-system.svc.cluster.local,internal.eda.nokia.com # kpt-set: eda-ce.${EDA_CORE_NAMESPACE}.svc,eda-ce.${EDA_CORE_NAMESPACE}.svc.${CLUSTER_DNS_SUFFIX},internal.eda.nokia.com
               csi.cert-manager.io/issuer-name: eda-internal-issuer
               csi.cert-manager.io/duration: 720h # kpt-set: ${EDA_INTERNAL_CERT_DURATION}
               csi.cert-manager.io/renew-before: 240h # kpt-set: ${EDA_INTERNAL_CERT_RENEW_BEFORE}
@@ -115,7 +119,7 @@ spec:
             driver: csi.cert-manager.io
             readOnly: true
             volumeAttributes:
-              csi.cert-manager.io/dns-names: eda-ce.${POD_NAMESPACE}.svc,eda-ce.${POD_NAMESPACE}.svc.cluster.local,aggsvr-svc.${POD_NAMESPACE}.svc,aggsvr-svc.${POD_NAMESPACE}.svc.cluster.local # kpt-set: eda-ce.${POD_NAMESPACE_IN_CSI}.svc,eda-ce.${POD_NAMESPACE_IN_CSI}.svc.cluster.local,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc,aggsvr-svc.${POD_NAMESPACE_IN_CSI}.svc.cluster.local
+              csi.cert-manager.io/dns-names: eda-ce.eda-system.svc,eda-ce.eda-system.svc.cluster.local,aggsvr-svc.eda-system.svc,aggsvr-svc.eda-system.svc.cluster.local # kpt-set: eda-ce.${EDA_CORE_NAMESPACE}.svc,eda-ce.${EDA_CORE_NAMESPACE}.svc.${CLUSTER_DNS_SUFFIX},aggsvr-svc.${EDA_CORE_NAMESPACE}.svc,aggsvr-svc.${EDA_CORE_NAMESPACE}.svc.${CLUSTER_DNS_SUFFIX}
               csi.cert-manager.io/issuer-name: eda-api-issuer
               csi.cert-manager.io/key-algorithm: ECDSA
           name: georedundant-tls
@@ -124,3 +128,8 @@ spec:
             name: eda-georedundant-trust-bundle
             optional: true
           name: georedundant-trustbundle
+        - configMap:
+            defaultMode: 420
+            name: eda-external-trust-bundle
+            optional: true
+          name: external-trust-bundle

@@ -1,3 +1,44 @@
+# Chain: eda-root-ca-issuer (eda-issuer-root package) → eda-api-root-ca CA → eda-api-ca → eda-api-issuer
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-api-root-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  isCA: true
+  commonName: eda-api-root-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-api-root-ca
+  secretTemplate:
+    labels:
+      eda.nokia.com/ca: "api"
+  usages:
+    - cert sign
+    - crl sign
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  duration: 8760h
+  renewBefore: 2160h
+  issuerRef:
+    name: eda-root-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-api-root-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  ca:
+    secretName: eda-api-root-ca
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -12,9 +53,6 @@ spec:
     organizationalUnits:
       - NI
   secretName: eda-api-ca
-  secretTemplate:
-    labels:
-      eda.nokia.com/ca: "api"
   usages:
     - digital signature
     - cert sign
@@ -26,9 +64,9 @@ spec:
     size: 256
     rotationPolicy: Always
   duration: 2160h
-  renewBefore: 1440h
+  renewBefore: 720h
   issuerRef:
-    name: eda-root-ca-issuer
+    name: eda-api-root-issuer
     kind: Issuer
     group: cert-manager.io
 ---
@@ -40,3 +78,34 @@ metadata:
 spec:
   ca:
     secretName: eda-api-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-branch-api-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  isCA: true
+  commonName: eda-branch-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-branch-api-ca
+  usages:
+    - digital signature
+    - cert sign
+    - key encipherment
+    - server auth
+    - client auth
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  duration: 2160h
+  renewBefore: 720h
+  issuerRef:
+    name: eda-api-root-issuer
+    kind: Issuer
+    group: cert-manager.io

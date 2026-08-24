@@ -1,0 +1,10 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ismetallbwebhookready
+  namespace: metallb-system
+spec:
+  autoAssign: false
+  addresses:
+    # TEST-NET-2 (RFC 5737): probe only; used with kubectl apply --dry-run=server
+    - 198.51.100.0/32

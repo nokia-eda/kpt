@@ -45,6 +45,49 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
+  name: eda-node-intermediate-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  isCA: true
+  commonName: eda-node-intermediate-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-node-intermediate-ca
+  secretTemplate:
+    labels:
+      eda.nokia.com/backup: "true"
+  usages:
+    - digital signature
+    - cert sign
+    - key encipherment
+    - server auth
+    - client auth
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  duration: 2160h
+  renewBefore: 1440h
+  issuerRef:
+    name: eda-node-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-node-intermediate-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  ca:
+    secretName: eda-node-intermediate-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
   name: eda-bootstrap-ca
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:

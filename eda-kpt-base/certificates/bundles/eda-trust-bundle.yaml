@@ -135,3 +135,31 @@ spec:
     namespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+---
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: eda-external-trust-bundle
+  labels:
+    eda.nokia.com/backup: "true"
+spec:
+  sources:
+  # Permanent baseline so trust-manager still syncs when all labeled external
+  # CAs are revoked (zero-cert bundles leave the target ConfigMap stale).
+  - useDefaultCAs: true
+  - secret:
+      selector:
+        matchLabels:
+          eda.nokia.com/ca: "external"
+      key: "ca.crt"
+  - configMap:
+      selector:
+        matchLabels:
+          eda.nokia.com/ca: "external"
+      key: "ca.crt"
+  target:
+    configMap:
+      key: "trust-bundle.pem"
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}

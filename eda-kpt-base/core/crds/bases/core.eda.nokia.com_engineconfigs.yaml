@@ -2,7 +2,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.19.0
+    controller-gen.kubebuilder.io/version: v0.21.0
   name: engineconfigs.core.eda.nokia.com
 spec:
   group: core.eda.nokia.com
@@ -697,6 +697,14 @@ spec:
                     description: The full URI to the git repository
                     type: string
                 type: object
+              identitySettings:
+                description: Settings specific to the identity server (i.e. authorization/authentication engine)
+                properties:
+                  resetEdaAdminPasswordOnFirstLogin:
+                    default: true
+                    description: If this is true (the default), the bootstrapped EDA admin user will be required to update their password on first login.
+                    type: boolean
+                type: object
               identitydb:
                 description: Settings related to Identity DB server.
                 properties:
@@ -920,6 +928,30 @@ spec:
                         type: string
                     type: object
                 type: object
+              mergeRequests:
+                default: {}
+                description: Settings related to merge request policies
+                properties:
+                  approverCondition:
+                    default: WritePermission
+                    description: Controls the condition that must be met for a user to be considered a valid approver for a merge request.
+                    enum:
+                    - WritePermission
+                    - WritePermissionNotRequestor
+                    type: string
+                  expireInactiveMinutes:
+                    default: 43200
+                    description: The number of minutes of inactivity after which a merge request expires.
+                    maximum: 525600
+                    minimum: 1
+                    type: integer
+                  requireApproverCount:
+                    default: 0
+                    description: The number of approvals required before a merge request can be merged.
+                    maximum: 10
+                    minimum: 0
+                    type: integer
+                type: object
               metricsServer:
                 description: Settings related to MetricsServer.
                 properties:
@@ -983,9 +1015,40 @@ spec:
                 items:
                   type: string
                 type: array
+              pipelineEngine:
+                description: Settings related to PipelineEngine.
+                properties:
+                  image:
+                    description: The full URI to the image
+                    type: string
+                  image-credential:
+                    description: The credential to use when interacting with the image
+                    type: string
+                  resources:
+                    description: Resource limits and requests for deployments
+                    properties:
+                      limits:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                      requests:
+                        properties:
+                          cpu:
+                            type: string
+                          memory:
+                            type: string
+                        type: object
+                    type: object
+                type: object
               python:
                 description: Settings related to Python interpreters.
                 properties:
+                  heap-initial-size:
+                    description: The initial heap size for each Python interpreter; grows dynamically up to HeapSize
+                    type: integer
                   heap-size:
                     description: The maximum heap size for each Python interpreter
                     type: integer
@@ -1099,6 +1162,9 @@ spec:
                   python:
                     description: Settings related to Python interpreters.
                     properties:
+                      heap-initial-size:
+                        description: The initial heap size for each Python interpreter; grows dynamically up to HeapSize
+                        type: integer
                       heap-size:
                         description: The maximum heap size for each Python interpreter
                         type: integer

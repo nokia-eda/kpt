@@ -1,0 +1,20 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeSecurityProfile
+metadata:
+  name: intermediate-ca-managed-tls
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:
+  nodeSelector:
+    - "eda.nokia.com/security-profile=intermediate-ca-managed"
+  tls:
+    issuerRef: "eda-node-intermediate-issuer"
+    csrParams:
+      csrSuite: "CSRSUITE_X509_KEY_TYPE_RSA_2048_SIGNATURE_ALGORITHM_SHA_2_256"
+      country: "US"
+      state: "California"
+      city: "Sunnyvale"
+      org: "NI"
+      orgUnit: "EDA"
+      certificateValidity: "2160h"

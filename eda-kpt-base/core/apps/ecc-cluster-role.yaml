@@ -8,20 +8,30 @@ rules:
   resources:
   - configmaps
   verbs:
+  - create
   - get
   - list
-  - watch
-  - create
-  - update
   - patch
+  - update
+  - watch
 - apiGroups:
   - ""
   resources:
+  - nodes
+  - persistentvolumeclaims
+  - pods
   - secrets
+  - services
   verbs:
   - get
   - list
   - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes/proxy
+  verbs:
+  - get
 - apiGroups:
   - cert-manager.io
   resources:
@@ -40,6 +50,8 @@ rules:
   - certcheck.eda.nokia.com
   resources:
   - certificatechecks
+  - dnschecks
+  - volumechecks
   verbs:
   - get
   - list
@@ -54,29 +66,16 @@ rules:
   - certcheck.eda.nokia.com
   resources:
   - certificatechecks/status
+  - dnschecks/status
+  - volumechecks/status
   verbs:
   - get
   - patch
   - update
 - apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - services
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
   - core.eda.nokia.com
   resources:
+  - engineconfigs
   - targetnodes
   verbs:
   - get

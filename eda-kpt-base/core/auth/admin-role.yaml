@@ -4,16 +4,18 @@ metadata:
   name: system-administrator
   namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
 spec:
-  description: This is the default administrator role for EDA. It cannot be deleted.  A user with this role can do anything.
+  description: This is the default administrator role for EDA. It cannot be deleted.
+  coreAccessItems:
+    - "*"
   resourceRules:
-  - apiGroups:
-    - '*'
-    permissions: readWrite
-    resources:
-    - '*'
+    - apiGroups:
+        - "*"
+      permissions: readWrite
+      resources:
+        - "*"
   tableRules:
-  - path: '.**'
-    permissions: read
+    - path: ".**"
+      permissions: read
   urlRules:
-  - path: '/**'
-    permissions: readWrite
+    - path: "/**"
+      permissions: readWrite

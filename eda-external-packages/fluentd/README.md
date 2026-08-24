@@ -1,28 +1,7 @@
-# fluentd
+# fluentd (legacy kpt package)
 
-## Description
-A sample deployment of fluentd + bit to capture and aggregate logs
+This directory is **kept in the repo for upgrades only**. It is **not** applied by default when installing EDA.
 
-## Usage
+Clusters that previously installed the legacy fluentd + fluent-bit stack via kpt should **remove** that inventory during upgrade (for example with `kpt live destroy` from a checkout or build tree that still maps to this package path and its resource group), following your release notes and runbooks.
 
-### Customization:
-
-The following kpt setters are available:
-
-* `${FB_IMG}` - The fluentbit ds image
-* `${FD_IMG}` - The fluentd deployment image
-
-### Fetch the package
-`kpt pkg get REPO_URI[.git]/PKG_PATH[@VERSION] fluentd`
-Details: https://kpt.dev/reference/cli/pkg/get/
-
-### View package content
-`kpt pkg tree fluentd`
-Details: https://kpt.dev/reference/cli/pkg/tree/
-
-### Apply the package
-```
-kpt live init fluentd
-kpt live apply fluentd --reconcile-timeout=2m --output=table
-```
-Details: https://kpt.dev/reference/cli/live/
+See the `Kptfile` metadata and your cluster’s kpt inventory for the exact group name and workflow.

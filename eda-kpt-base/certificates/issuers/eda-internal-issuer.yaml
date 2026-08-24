@@ -1,3 +1,44 @@
+# Chain: eda-root-ca-issuer (eda-issuer-root package) → eda-internal-root-ca → eda-internal-ca → eda-internal-issuer
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: eda-internal-root-ca
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  isCA: true
+  commonName: eda-internal-root-ca
+  subject:
+    organizations:
+      - Nokia
+    organizationalUnits:
+      - NI
+  secretName: eda-internal-root-ca
+  secretTemplate:
+    labels:
+      eda.nokia.com/ca: "internal"
+  usages:
+    - cert sign
+    - crl sign
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  duration: 8760h
+  renewBefore: 2160h
+  issuerRef:
+    name: eda-root-ca-issuer
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: eda-internal-root-issuer
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  ca:
+    secretName: eda-internal-root-ca
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -12,9 +53,6 @@ spec:
     organizationalUnits:
       - NI
   secretName: eda-internal-ca
-  secretTemplate:
-    labels:
-      eda.nokia.com/ca: "internal"
   usages:
     - digital signature
     - cert sign
@@ -26,9 +64,9 @@ spec:
     size: 256
     rotationPolicy: Always
   duration: 2160h
-  renewBefore: 1440h
+  renewBefore: 720h
   issuerRef:
-    name: eda-root-ca-issuer
+    name: eda-internal-root-issuer
     kind: Issuer
     group: cert-manager.io
 ---

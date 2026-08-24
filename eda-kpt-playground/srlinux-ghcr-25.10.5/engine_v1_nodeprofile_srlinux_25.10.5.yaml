@@ -1,0 +1,28 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeProfile
+metadata:
+  name: srlinux-ghcr-25.10.5
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:
+  nodeUser: admin
+  operatingSystem: srl
+  port: 57400
+  version: 25.10.5
+  versionPath: .system.information.version
+  versionMatch: v25\.10\.5.*
+  yang: https://eda-asvr.eda-system.svc/_base_/schemaprofiles/srlinux-ghcr-25.10.5/srlinux-25.10.5.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/_base_/schemaprofiles/srlinux-ghcr-25.10.5/srlinux-25.10.5.zip
+  llmDb: https://eda-asvr.eda-system.svc/_base_/llm-dbs/llm-db-srlinux-ghcr-25.10.5/llm-embeddings-srl-25-10-5.tar.gz # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/_base_/llm-dbs/llm-db-srlinux-ghcr-25.10.5/llm-embeddings-srl-25-10-5.tar.gz
+  dhcp:
+    managementPoolv4: 'ipv4-mgmt-pool'
+    dhcp4Options:
+    - option: 6-DomainNameServer
+      value:
+      - 128.251.10.125
+  license: cx-srl-25-10-5-ghcr-license
+  images:
+  - image: _base_/srlimages/srlinux-25.10.5-111
+    imageMd5: _base_/srlimages/srlinux-25.10.5-111-md5
+  containerImage: ghcr.io/nokia/srlinux:25.10.5-111 # kpt-set: ${SRL_25_10_5_GHCR}
+  imagePullSecret: core # kpt-set: ${CORE_IMG_CREDENTIALS}

@@ -22,7 +22,7 @@ spec:
       - 128.251.10.125
   license: cx-srl-25-10-3-ghcr-license
   images:
-  - image: _base_/srlimages/srlinux-25.10.3-449
-    imageMd5: _base_/srlimages/srlinux-25.10.3-449-md5
-  containerImage: ghcr.io/nokia/srlinux:25.10.3-449 # kpt-set: ${SRL_25_10_3_GHCR}
+  - image: _base_/srlimages/srlinux-25.10.3-451
+    imageMd5: _base_/srlimages/srlinux-25.10.3-451-md5
+  containerImage: ghcr.io/nokia/srlinux:25.10.3-451 # kpt-set: ${SRL_25_10_3_GHCR}
   imagePullSecret: core # kpt-set: ${CORE_IMG_CREDENTIALS}

@@ -1,0 +1,20 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeProfile
+metadata:
+  name: eos-ghcr-4.36.2f
+  namespace: eda # kpt-set: ${EDA_USER_NAMESPACE}
+  labels:
+    eda.nokia.com/bootstrap: "true"
+spec:
+  nodeUser: admin
+  port: 50051
+  operatingSystem: eos
+  version: 4.36.2f
+  yang: https://eda-asvr.eda-system.svc/_base_/schemaprofiles/eos-ghcr-4.36.2f/eos-4.36.2f.zip # kpt-set: https://eda-asvr.${EDA_CORE_NAMESPACE}.svc/_base_/schemaprofiles/eos-ghcr-4.36.2f/eos-4.36.2f.zip
+  dhcp:
+    managementPoolv4: 'ipv4-mgmt-pool'
+    dhcp4Options:
+    - option: 6-DomainNameServer
+      value:
+      - 128.251.10.125
+  license: cx-eos-4-36-2f-license

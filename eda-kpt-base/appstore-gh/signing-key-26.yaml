@@ -1,0 +1,13 @@
+apiVersion: appstore.eda.nokia.com/v1
+kind: SigningKey
+metadata:
+  name: signing-key-26
+  namespace: eda-system # kpt-set: ${EDA_CORE_NAMESPACE}
+spec:
+  publicKeys:
+    - title: signing-key-26
+      key: |
+        -----BEGIN PUBLIC KEY-----
+        MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEVWgc3RxA/KE4k2mwcEl7Y70S64Zz
+        A7xv/fPKuINQUIMJ7X7U+e2Yp8dtTW5l1oaRjZ2NyBqch5fmR3UMOvjZRQ==
+        -----END PUBLIC KEY-----

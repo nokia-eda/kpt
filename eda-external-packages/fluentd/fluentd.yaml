@@ -68,7 +68,7 @@ spec:
             name: fluentd-config
       containers:
         - name: eda-fluentd
-          image: ghcr.io/nokia-eda/core/fluentd:v1.17.0-debian-1.0 # kpt-set: ${FD_IMG}
+          image: ${FD_IMG} # kpt-set: ${FD_IMG}
           securityContext:
             privileged: true
           volumeMounts:
